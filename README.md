@@ -18,5 +18,5 @@
   
   
   ### Скетчи
-    [id]: https://drive.google.com/drive/folders/17L7j_giuaJUHBm8jdaWCoc4nKJfax0Js
+    https://drive.google.com/drive/folders/17L7j_giuaJUHBm8jdaWCoc4nKJfax0Js
 
