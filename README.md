@@ -1,3 +1,7 @@
 # global-messenger
-## global-messenger
+  Мессенджер похожий на телеграм 
+## Функционал
+  1)
+  2)
+  3)
 
