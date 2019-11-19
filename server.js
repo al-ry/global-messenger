@@ -1,12 +1,13 @@
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
-var socket = require('socker.io').listen(server);
+var socket = require('socket.io').listen(server);
 
-server.listen(3000);
 
-app.get('/', function(request, response) {
-    respons.sendFile(__dirname + /*Name of app*/)
+/*app.get('/', function(request, response) {
+    respons.sendFile(__dirname + Name of app)
+})*/
+
+app.listen('3000', () => {
+    console.log('Server started on port 3000')
 })
-
-jkhjkhjhkjhkjhk
