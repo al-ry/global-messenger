@@ -4,7 +4,6 @@ var db = new sqlite3.Database('test.sqlite3');
 console.log('yes');
 
 
-
 db.serialize(function() {
     var prepare = db.prepare('INSERT INTO test(name) VALUES (?)');
     prepare.run('Alexander');

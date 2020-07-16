@@ -4,11 +4,14 @@
   "description": "Мессенджер похожий на телеграм \r ## Функционал\r   1)Регистрация",
   "main": "database.js",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "crypto": "^1.0.1",
     "express": "^4.17.1",
     "morgan": "^1.9.1",
     "mysql": "^2.17.1",
     "socket.io": "^2.3.0",
-    "sqlite3": "^5.0.0"
+    "sqlite3": "^5.0.0",
+    "uuid": "^8.2.0"
   },
   "devDependencies": {},
   "scripts": {
