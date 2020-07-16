@@ -1,4 +1,5 @@
-var db = require('./db/database')
+var db = require('./db/database.js')
+
 
 var express = require('express')
 var app = express()
@@ -8,7 +9,6 @@ var uuid = require('uuid')
 var bodyParser = require('body-parser')
 var registerRouter = require('./routes/registerRouter')
 var loginRouter = require('./routes/loginRouter')
-
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
@@ -33,7 +33,6 @@ function SaltHashPassword(userPassword){
     var passwordData = SHA512(userPassword, salt)
     return passwordData
 }
-
 
 app.listen('3000', () => {
     console.log('Server started on port 3000...')

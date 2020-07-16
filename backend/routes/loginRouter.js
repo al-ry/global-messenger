@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const loginRouter = Router()
 
-loginRouter.post('/register', (req, res) => {
+loginRouter.post('/login', (req, res) => {
 
 })
 
