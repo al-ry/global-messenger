@@ -17,25 +17,36 @@ class MainActivity : AppCompatActivity() {
 
 
         val signInButton: Button = findViewById(R.id.sign_in_button)
-        //log_in_link.setOnClickListener{
-        //    val intent = Intent(this, LogInActivity::class.java)
-        //    startActivity(intent)
-        //}
 
+        log_in_link.setOnClickListener{
+            val intent = Intent(this, SignInActivity::class.java)
+          startActivity(intent)
+        }
 
-
-        signInButton.setOnClickListener{ showUserData()}
-
-
+        signInButton.setOnClickListener{ showUserData() }
     }
 
     private fun showUserData() {
-        Toast.makeText(this,"You are in", Toast.LENGTH_SHORT).show()
+        val info = getUserInfo()
+        var result = String()
+
+        if (info[0].isEmpty() || info[1].isEmpty() || info[2].isEmpty())
+        {
+            result = "You should fill all the fields"
+        }
+        else
+        {
+            result = info[0] + "/n" + info[1] + "/n" + info[2]
+        }
+
+        Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
     }
 
     private fun getUserInfo(): List<String> {
         val password = password_field.text.toString()
         val userName = userName_field.text.toString()
-        return listOf(userName, password)
+        val phoneNumber = phone_number_field.text.toString()
+
+        return listOf(userName, phoneNumber, password)
     }
 }
