@@ -13,8 +13,6 @@ app.use(bodyParser.urlencoded({extended : true}))
 app.use(registerRouter)
 app.use(loginRouter)
 
-
-
 var GetRandomString = function(length) {
     return crypto.randomBytes(Math.ceil(length/2)).toString('hex').slice(0, length)
 }
