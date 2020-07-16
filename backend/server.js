@@ -3,15 +3,17 @@ var db = require('./db/database.js')
 
 var express = require('express')
 var app = express()
-var server = require('http').createServer(app)
-var crypto = require('crypto')
-var uuid = require('uuid')
 var bodyParser = require('body-parser')
+var crypto = require('crypto')
 var registerRouter = require('./routes/registerRouter')
 var loginRouter = require('./routes/loginRouter')
 
+
+
+
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended : true}))
+
 app.use(registerRouter)
 app.use(loginRouter)
 
