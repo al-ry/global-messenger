@@ -14,7 +14,7 @@ module.exports = class User {
         console.log(hashData.passwordHash)
         var prep = db.prepare('INSERT INTO user(telephone, name, crypted_password, salt_password)'
          + 'VALUES (?, ?, ?, ?)')
-        prep.run(this.name, this.telephone, hashData.passwordHash, hashData.salt)
+        prep.run(this.telephone, this.name, hashData.passwordHash, hashData.salt)
     }
 
     Find(callback) {

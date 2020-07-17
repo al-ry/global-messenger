@@ -13,8 +13,8 @@ exports.ParseRegisterData = (req, res) => {
         if (result) {
             res.send('user already exists. try again');
         } else {
-            res.send('user is not exist')
             newUser.Register()
+            res.send('user successfully registrated')
         }
     })
 
