@@ -11,12 +11,12 @@ import retrofit2.http.FormUrlEncoded
 interface INodeJS {
     @POST("register")
     @FormUrlEncoded
-    fun RegisterUser(@Field("Phone") phone:String,
-                    @Field("Password") password:String,
-                    @Field("Username") username:String): Observable<String>
+    fun RegisterUser(@Field("username") username: String,
+                     @Field("telephone") phone: String,
+                     @Field("password") password: String): Observable<String>
 
     @POST("login")
     @FormUrlEncoded
-    fun LogInUser(@Field("Phone") phone:String,
-                  @Field("Password") password:String): Observable<String>
+    fun LogInUser(@Field("telephone") phone: String,
+                  @Field("password") password: String): Observable<String>
  }

@@ -1,6 +1,4 @@
 package com.example.kotlinmessenger
-
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -10,53 +8,48 @@ import com.example.kotlinmessenger.retrofit.RetrofitClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
-
-class SignInActivity: AppCompatActivity()
+class SignUpActivity : AppCompatActivity()
 {
-   lateinit var myApi:INodeJS
-   var compositeDisposable = CompositeDisposable()
+    lateinit var myApi:INodeJS
+    var compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
+        setContentView(R.layout.activity_main)
 
+        val signUpButton: Button = findViewById(R.id.sign_up_button)
         val retrofit = RetrofitClient.instance
 
-        val signInButton: Button = findViewById(R.id.sign_in_button)
-
         myApi = retrofit.create(INodeJS::class.java)
-        signInButton.setOnClickListener {
-            val info = CheckUserInfo(sign_in_phone_field.text.toString(),
-                sign_in_password_field.text.toString())
+
+        signUpButton.setOnClickListener{
+            val info = CheckUserInfo(sign_up_username_field.text.toString(),
+            sign_up_phone_field.text.toString(), sign_up_password_field.text.toString())
 
             if (info.isNotEmpty())
             {
-                LogIn(info)
+                Registrate(info)
             }
-        }
-
-        sign_up_link.setOnClickListener {
-            val intent = Intent(this, SignUpActivity::class.java)
-            startActivity(intent)
         }
     }
 
-    private fun CheckUserInfo(phone: String, password: String) : List<String>
+    private fun CheckUserInfo(username: String, phone: String, password: String) : List<String>
     {
-        if (phone.isEmpty() || password.isEmpty())
+        if (phone.isEmpty() || username.isEmpty() || password.isEmpty())
         {
             Toast.makeText(this , "Fields should not be empty", Toast.LENGTH_LONG).show()
             return emptyList()
         }
 
-        return listOf(phone, password)
+        return listOf(username, phone, password)
     }
 
-    private fun LogIn(userInfo : List<String>)
+    private fun Registrate(userInfo : List<String>)
     {
-        compositeDisposable.add(myApi.LogInUser(userInfo[0], userInfo[1])
+        compositeDisposable.add(myApi.RegisterUser(userInfo[0], userInfo[1], userInfo[2])
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe{message ->
