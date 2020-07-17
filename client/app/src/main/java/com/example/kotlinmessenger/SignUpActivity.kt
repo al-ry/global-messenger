@@ -1,4 +1,5 @@
 package com.example.kotlinmessenger
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -27,7 +28,8 @@ class SignUpActivity : AppCompatActivity()
 
         signUpButton.setOnClickListener{
             val info = CheckUserInfo(sign_up_username_field.text.toString(),
-            sign_up_phone_field.text.toString(), sign_up_password_field.text.toString())
+            sign_up_phone_field.text.toString(), sign_up_password_field.text.toString(),
+                sign_up_password_repeat_field.text.toString())
 
             if (info.isNotEmpty())
             {
@@ -36,11 +38,18 @@ class SignUpActivity : AppCompatActivity()
         }
     }
 
-    private fun CheckUserInfo(username: String, phone: String, password: String) : List<String>
+    private fun CheckUserInfo(username: String, phone: String,
+                              password: String, repeatPassword : String) : List<String>
     {
         if (phone.isEmpty() || username.isEmpty() || password.isEmpty())
         {
             Toast.makeText(this , "Fields should not be empty", Toast.LENGTH_LONG).show()
+            return emptyList()
+        }
+
+        if (password != repeatPassword)
+        {
+            Toast.makeText(this , "Passwords does not match", Toast.LENGTH_LONG).show()
             return emptyList()
         }
 
@@ -53,10 +62,14 @@ class SignUpActivity : AppCompatActivity()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe{message ->
-                if (message.contains("encrypted_password"))
-                    Toast.makeText(this , "Login success", Toast.LENGTH_LONG).show()
+                if (message == "user successfully registrated")
+                {
+                    Toast.makeText(this, "Successed registration", Toast.LENGTH_LONG).show()
+                    val intent = Intent(this, SignInActivity::class.java)
+                    startActivity(intent)
+                }
                 else
-                    Toast.makeText(this , message + "ass", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this ,  message, Toast.LENGTH_LONG).show()
             })
     }
 }

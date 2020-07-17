@@ -60,10 +60,13 @@ class SignInActivity: AppCompatActivity()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe{message ->
-                if (message.contains("encrypted_password"))
-                    Toast.makeText(this , "Login success", Toast.LENGTH_LONG).show()
+                if (message == "user successfully registrated") {
+                    Toast.makeText(this, "Login success", Toast.LENGTH_LONG).show()
+                    val intent = Intent(this, SignUpActivity::class.java)
+                    startActivity(intent)
+                }
                 else
-                    Toast.makeText(this , message + "ass", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this , message, Toast.LENGTH_LONG).show()
             })
     }
 }
