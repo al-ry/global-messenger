@@ -7,7 +7,7 @@
     android:background="#009688">
 
     <EditText
-        android:id="@+id/password_field2"
+        android:id="@+id/password_field"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="40dp"
@@ -16,13 +16,13 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:paddingLeft="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/userName_field2"
+        app:layout_constraintEnd_toEndOf="@+id/userName_field"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/userName_field2"
-        app:layout_constraintTop_toBottomOf="@+id/userName_field2" />
+        app:layout_constraintStart_toStartOf="@+id/userName_field"
+        app:layout_constraintTop_toBottomOf="@+id/userName_field" />
 
     <EditText
-        android:id="@+id/userName_field2"
+        android:id="@+id/userName_field"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="32dp"
@@ -39,14 +39,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/sign_in_button"
+        style="sign_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="Sing in"
-        app:layout_constraintEnd_toEndOf="@+id/password_field2"
+        app:layout_constraintEnd_toEndOf="@+id/password_field"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/password_field2"
-        app:layout_constraintTop_toBottomOf="@+id/password_field2" />
+        app:layout_constraintStart_toStartOf="@+id/password_field"
+        app:layout_constraintTop_toBottomOf="@+id/password_field" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

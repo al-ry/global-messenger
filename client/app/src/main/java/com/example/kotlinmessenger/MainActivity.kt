@@ -1,5 +1,4 @@
 package com.example.kotlinmessenger
-import io.reactivex.Observable
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,19 +22,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        val signInButton: Button = findViewById(R.id.sign_in_button)
+        val signUpButton: Button = findViewById(R.id.sign_up_button)
         val retrofit = RetrofitClient.instance
         myApi = retrofit.create(INodeJS::class.java)
 
-        log_in_link.setOnClickListener{
-            val intent = Intent(this, SignInActivity::class.java)
-          startActivity(intent)
-        }
+        //log_in_link.setOnClickListener{
+           // val intent = Intent(this, SignInActivity::class.java)
+         // startActivity(intent)
+        //}
 
-        signInButton.setOnClickListener{
+        signUpButton.setOnClickListener{
             val info = getUserInfo()
-            compositeDisposable.add(myApi.LogInUser(info[0], info[1])
+            compositeDisposable.add(myApi.LogInUser("asd", "123")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe{message ->
