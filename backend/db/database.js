@@ -7,10 +7,5 @@ var db = new sqlite3.Database('messenger.sqlite3');
 //    prepare.run('Alexander');
 //})
 
-exports.FindUser = (user) => {
 
-}
-
-exports.RegisterNewUser = (user) => {
-    
-}
+module.exports = db;
