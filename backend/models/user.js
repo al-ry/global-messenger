@@ -10,7 +10,7 @@ module.exports = class User {
         this.telephone = telephone
     }
     async Register() {
-        var hashData = await pass.SaltHashPassword(this.password)
+        var hashData = pass.SaltHashPassword(this.password)
         var prep = db.prepare('INSERT INTO user(telephone, name, crypted_password, salt_password)'
          + 'VALUES (?, ?, ?, ?)')
         await prep.run(this.telephone, this.name, hashData.passwordHash, hashData.salt)
@@ -23,8 +23,8 @@ module.exports = class User {
             callback(result)
         })
     }  
-    static async CheckPassword(password, encryptedPassword, salt) {
-        var hashedPassword = await pass.CheckHashPassword(password, salt).passwordHash
+    static CheckPassword(password, encryptedPassword, salt) {
+        var hashedPassword = pass.CheckHashPassword(password, salt).passwordHash
         if (encryptedPassword == hashedPassword) {
             return true;
         }
