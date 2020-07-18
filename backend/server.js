@@ -11,8 +11,18 @@ app.use(bodyParser.urlencoded({extended : true}))
 app.use(registerRouter)
 app.use(loginRouter)
 
+
 app.listen('3000', () => {
     console.log('Server started on port 3000...')
 
 })
 
+var pass = require('./config/authConfig.js')
+
+app.get('/', (res, req) => {
+    var crypt = pass.SaltHashPassword('new');
+    console.log(crypt.passwordHash)
+    var passsword = pass.CheckHashPassword('new', crypt.salt)
+    console.log(passsword.passwordHash)
+    req.send('hello')
+})

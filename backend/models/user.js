@@ -1,5 +1,5 @@
-var db = require('../db/database.js')
 var pass = require('../config/authConfig.js')
+var db = require('../db/database')
 
 
 module.exports = class User {
@@ -9,22 +9,25 @@ module.exports = class User {
         this.password = password
         this.telephone = telephone
     }
-    Register() {
-        var hashData = pass.SaltHashPassword(this.password)
-        console.log(hashData.passwordHash)
+    async Register() {
+        var hashData = await pass.SaltHashPassword(this.password)
         var prep = db.prepare('INSERT INTO user(telephone, name, crypted_password, salt_password)'
          + 'VALUES (?, ?, ?, ?)')
-        prep.run(this.telephone, this.name, hashData.passwordHash, hashData.salt)
+        await prep.run(this.telephone, this.name, hashData.passwordHash, hashData.salt)
     }
 
-    Find(callback) {
+    static async Find(telephone, callback) {
         var prep = db.prepare('SELECT * FROM user WHERE telephone = ?')  
-        prep.get(this.telephone, function(err, result) {
+        prep.get(telephone, await function(err, result) {
             if (err) throw err
-            console.log(result)
             callback(result)
         })
-    }
-
-        
+    }  
+    static async CheckPassword(password, encryptedPassword, salt) {
+        var hashedPassword = await pass.CheckHashPassword(password, salt).passwordHash
+        if (encryptedPassword == hashedPassword) {
+            return true;
+        }
+        return false;
+    }     
 }

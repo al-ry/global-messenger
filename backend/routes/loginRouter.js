@@ -3,6 +3,6 @@ const loginRouter = Router()
 const loginController = require('../controllers/loginController.js')
 
 
-loginRouter.post('/login', loginController.ParseLoginData)
+loginRouter.post('/login', loginController.Login)
 
 module.exports = loginRouter

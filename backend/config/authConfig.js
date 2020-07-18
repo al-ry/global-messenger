@@ -19,4 +19,9 @@ var SaltHashPassword = function(userPassword){
     return passwordData
 }
 
-module.exports = {SaltHashPassword}
+var CheckHashPassword = function(userPassword, salt) {
+    var passwordData = SHA512(userPassword, salt)
+    return passwordData
+}
+
+module.exports = {SaltHashPassword, CheckHashPassword}

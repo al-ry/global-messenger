@@ -1,9 +1,19 @@
-exports.ParseLoginData = (req, res) => {
+var User = require('../models/user.js')
+
+exports.Login = (req, res) => {
     var userData = req.body
-    var telephone = userData.telephone
-    var password = userData.password
-    console.log('body is ' + userData)
-    console.log('telephone is ' + telephone)
-    console.log('password is ' + password)   
-    res.send('success')
+    User.Find(userData.telephone, function(result) {
+        if (result)
+        {
+            if(User.CheckPassword(userData.password, result.crypted_password, result.salt_password))
+            {  
+                res.send('data is correct')
+            } else{
+                res.send('data is incorrect')
+            }
+        } else {
+            res.send('login is wrong')
+        }
+    })
+
 }
