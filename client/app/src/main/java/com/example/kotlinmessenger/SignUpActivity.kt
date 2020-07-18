@@ -62,7 +62,7 @@ class SignUpActivity : AppCompatActivity()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe{message ->
-                if (message == "user successfully registrated")
+                if (message == "new login")
                 {
                     Toast.makeText(this, "Successed registration", Toast.LENGTH_LONG).show()
                     val intent = Intent(this, SignInActivity::class.java)
