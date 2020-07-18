@@ -1,15 +1,24 @@
-
 var express = require('express')
 var app = express()
 var bodyParser = require('body-parser')
 var registerRouter = require('./routes/registerRouter')
 var loginRouter = require('./routes/loginRouter')
-
+var liteStore = require('connect-sqlite3')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
 
 app.use(registerRouter)
 app.use(loginRouter)
+//app.use(express.cookieParser())
+//app.use(express.session())
+// app.use(session({
+//     secret: 'secret',
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//         maxAge: 60 * 30 * 1000
+//     }
+// }))
 
 
 app.listen('3000', () => {
