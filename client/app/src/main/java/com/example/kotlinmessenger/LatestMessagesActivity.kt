@@ -28,12 +28,12 @@ class LatestMessagesActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe{message ->
                 if (message == "home") {
-                    val intent = Intent(this, LatestMessagesActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                    Toast.makeText(this , "assaaaa", Toast.LENGTH_LONG).show()
                 }
                 else
                     Toast.makeText(this , message + "ass", Toast.LENGTH_LONG).show()
+                    val intent = Intent(this, SignInActivity::class.java)
+                    startActivity(intent)
             })
     }
 }

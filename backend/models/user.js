@@ -1,4 +1,4 @@
-var pass = require('../config/authConfig.js')
+var pass = require('../config/authConfig')
 var db = require('../db/database')
 
 

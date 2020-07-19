@@ -22,6 +22,6 @@ interface INodeJS {
     fun LogInUser(@Field("telephone") phone: String,
                       @Field("password") password: String): Observable<String>
 
-    @GET("home")
+    @POST("home")
     fun CheckSession(): Observable<String>
  }
