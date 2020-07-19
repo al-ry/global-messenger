@@ -6,9 +6,12 @@ exports.Login = (req, res) => {
     User.Find(userData.telephone, function(result) {
         if (result)
         {
-            if(User.CheckPassword(userData.password, result.crypted_password, result.salt_password) === true)
+            if(User.CheckPassword(userData.password, result.crypted_password, result.salt_password) == true)
             {
+                req.session = result
+                console.log(req.session)
                 res.json(result)
+
             } else {
                 res.send('data is incorrect')
             }
