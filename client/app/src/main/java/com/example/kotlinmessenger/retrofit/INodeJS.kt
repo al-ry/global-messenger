@@ -23,6 +23,5 @@ interface INodeJS {
                       @Field("password") password: String): Observable<String>
 
     @GET("home")
-    @FormUrlEncoded
     fun CheckSession(): Observable<String>
  }

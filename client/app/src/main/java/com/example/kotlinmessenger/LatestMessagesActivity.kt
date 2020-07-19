@@ -20,8 +20,6 @@ class LatestMessagesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages)
 
-        Toast.makeText(this, "jopka", Toast.LENGTH_SHORT).show();
-
         val retrofit = RetrofitClient.instance
         myApi = retrofit.create(INodeJS::class.java)
 
@@ -29,13 +27,13 @@ class LatestMessagesActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe{message ->
-                if (message == "200") {
+                if (message == "home") {
                     val intent = Intent(this, LatestMessagesActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 }
                 else
-                    Toast.makeText(this , message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this , message + "ass", Toast.LENGTH_LONG).show()
             })
     }
 }
