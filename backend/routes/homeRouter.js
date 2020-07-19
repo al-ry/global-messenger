@@ -3,6 +3,6 @@ const homeRouter = Router()
 const homeController = require('../controllers/homeController')
 
 
-loginRouter.get('/home', homeController.RenderHome)
+homeRouter.get('/home', homeController.Home)
 
-module.exports = loginRouter
+module.exports = homeRouter

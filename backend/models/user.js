@@ -32,7 +32,7 @@ module.exports = class User {
     } 
     static async GetAll(callback)  
     {
-        await db.all('SELECT * FROM user', function(err, result) {
+        await db.all('SELECT telephone, name FROM user', function(err, result) {
             if (err) throw err
             callback(result)
         })
