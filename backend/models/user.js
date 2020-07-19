@@ -29,5 +29,12 @@ module.exports = class User {
             return true;
         }
         return false;
-    }     
+    } 
+    static async GetAll(callback)  
+    {
+        await db.all('SELECT * FROM user', function(err, result) {
+            if (err) throw err
+            callback(result)
+        })
+    }
 }
