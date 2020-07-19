@@ -1,13 +1,12 @@
 
 exports.Home = (req, res) => {
-    var user = req.session.user 
-    console.log('home')
-    if (user)
+    console.log(req.session.user)
+    if (req.session.user)
     {
         console.log('success')
-        res.status(200)
+        res.send('success')
     } else {
         console.log('fail')
-        res.status(404)
+        res.send('fail')
     }
 }

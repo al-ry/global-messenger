@@ -9,10 +9,8 @@ var homeRouter = require('./routes/homeRouter')
 var session = require('express-session');
 var SQLiteStore = require('connect-sqlite3')(session);
 
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
-app.set('trustproxy', true)
 app.use(cookieParser())
 app.use(session({
     secret: 'any secret string',
