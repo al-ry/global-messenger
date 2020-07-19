@@ -11,5 +11,4 @@ exports.Register = (req, res) => {
             newUser.Register()
         }
     })
-
 }

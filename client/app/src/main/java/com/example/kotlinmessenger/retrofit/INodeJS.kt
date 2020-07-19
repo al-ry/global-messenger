@@ -2,6 +2,8 @@ package com.example.kotlinmessenger.retrofit
 
 import io.reactivex.Observable
 import android.text.LoginFilter
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.http.Field
 import retrofit2.http.POST
 import retrofit2.http.FormUrlEncoded
@@ -18,5 +20,5 @@ interface INodeJS {
     @POST("login")
     @FormUrlEncoded
     fun LogInUser(@Field("telephone") phone: String,
-                  @Field("password") password: String): Observable<String>
+                      @Field("password") password: String): Observable<String>
  }

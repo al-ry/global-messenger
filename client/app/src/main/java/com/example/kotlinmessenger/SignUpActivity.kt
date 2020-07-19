@@ -61,7 +61,8 @@ class SignUpActivity : AppCompatActivity()
         compositeDisposable.add(myApi.RegisterUser(userInfo[0], userInfo[1], userInfo[2])
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe{message ->
+            .subscribe{
+                    message ->
                 if (message == "new login")
                 {
                     Toast.makeText(this, "Successed registration", Toast.LENGTH_LONG).show()

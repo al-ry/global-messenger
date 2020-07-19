@@ -1,10 +1,10 @@
 package com.example.kotlinmessenger
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinmessenger.retrofit.INodeJS
 import com.example.kotlinmessenger.retrofit.RetrofitClient
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,7 +23,6 @@ class SignInActivity: AppCompatActivity()
         setContentView(R.layout.activity_sign_in)
 
         val retrofit = RetrofitClient.instance
-
         val signInButton: Button = findViewById(R.id.sign_in_button)
 
         myApi = retrofit.create(INodeJS::class.java)
@@ -62,7 +61,8 @@ class SignInActivity: AppCompatActivity()
             .subscribe{message ->
                 if (message == "user successfully registrated") {
                     Toast.makeText(this, "Login success", Toast.LENGTH_LONG).show()
-                    val intent = Intent(this, SignUpActivity::class.java)
+                    val intent = Intent(this, LatestMessagesActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 }
                 else

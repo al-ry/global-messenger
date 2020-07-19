@@ -8,7 +8,7 @@ exports.Login = (req, res) => {
         {
             if(User.CheckPassword(userData.password, result.crypted_password, result.salt_password) === true)
             {
-                res.json(result).send('data is correct')
+                res.json(result)
             } else {
                 res.send('data is incorrect')
             }
