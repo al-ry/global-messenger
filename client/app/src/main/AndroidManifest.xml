@@ -12,14 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".LatestMessagesActivity"></activity>
-        <activity android:name=".SignInActivity">
+        <activity android:name=".SignInActivity"></activity>
+
+        <activity android:name=".LatestMessagesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".SignUpActivity"></activity>
     </application>
 
