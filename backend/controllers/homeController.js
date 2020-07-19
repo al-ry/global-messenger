@@ -4,10 +4,10 @@ exports.Home = (req, res) => {
     console.log('home')
     if (user)
     {
-        console.log('home')
+        console.log('success')
         res.status(200)
     } else {
-        console.log('home')
+        console.log('fail')
         res.status(404)
     }
 }
