@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:paddingStart="30dp"
+    android:paddingEnd="30dp"
+    tools:context=".SignUpActivity">
+
+    <TextView
+        android:id="@+id/Registration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Sign up"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/sign_up_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="Sing up"
+        app:layout_constraintEnd_toEndOf="@+id/sign_up_password_repeat_field"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="@+id/sign_up_password_repeat_field"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_password_repeat_field" />
+
+    <EditText
+        android:id="@+id/sign_up_phone_field"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:background="#FFFFFF"
+        android:ems="10"
+        android:hint="Phone"
+        android:inputType="phone"
+        android:paddingStart="15dp"
+        app:layout_constraintEnd_toEndOf="@+id/sign_up_username_field"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/sign_up_username_field"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_username_field" />
+
+    <EditText
+        android:id="@+id/sign_up_password_field"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:background="#FFFFFF"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:paddingStart="15dp"
+        app:layout_constraintEnd_toEndOf="@+id/sign_up_phone_field"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/sign_up_phone_field"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_phone_field" />
+
+    <EditText
+        android:id="@+id/sign_up_username_field"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:background="#FFFFFF"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:paddingStart="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Registration" />
+
+    <EditText
+        android:id="@+id/sign_up_password_repeat_field"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:background="#FFFFFF"
+        android:ems="10"
+        android:hint="Repeat password"
+        android:inputType="textPassword"
+        android:paddingStart="15dp"
+        app:layout_constraintEnd_toEndOf="@+id/sign_up_password_field"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="@+id/sign_up_password_field"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_password_field" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
