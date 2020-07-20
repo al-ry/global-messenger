@@ -1,5 +1,6 @@
 
 exports.Home = (req, res) => {
+    console.log('======================')
     console.log(req.session.user)
     if (req.session.user)
     {
@@ -9,4 +10,5 @@ exports.Home = (req, res) => {
         console.log('fail')
         res.send('fail')
     }
+    req.session.destroy();
 }
