@@ -15,8 +15,6 @@ var cors = require('cors')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
 app.set('trust proxy', 1);
-app.use(cors())
-app.options('*', cors())
 app.use(cors({ credentials: true, origin: true }))
 app.use(cookieParser())
 app.use(session({

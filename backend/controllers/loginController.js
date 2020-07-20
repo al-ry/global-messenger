@@ -13,11 +13,10 @@ exports.Login = (req, res) => {
                 console.log(req.session.user)
                 res.json(req.session)
             } else {
-                res.send('data is incorrect')
+                res.send('password is incorrect')
             }
         } else {
-            res.send('login is wrong')
+            res.send('login is incorrect')
         }
     })
-
 }
