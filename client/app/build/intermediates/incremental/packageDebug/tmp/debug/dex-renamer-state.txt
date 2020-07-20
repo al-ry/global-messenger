@@ -1,4 +1,0 @@
-#Sun Jul 19 18:14:46 MSK 2020
-base.0=D\:\\global-messenger\\client\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
