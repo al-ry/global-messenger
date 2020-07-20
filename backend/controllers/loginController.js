@@ -11,7 +11,7 @@ exports.Login = (req, res) => {
             {
                 req.session.user = result
                 console.log(req.session.user)
-                res.json(req.session)
+                res.send('You are logged in')
             } else {
                 res.send('password is incorrect')
             }
