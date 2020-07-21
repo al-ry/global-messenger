@@ -10,11 +10,15 @@ exports.Login = (req, res) => {
             {
                 console.log('================login')
                 req.session.user = result
-                console.log(req.session.user)
+                console.log(req.session)
+                console.log(req.sessionID)
                 console.log(req.cookies)
+                console.log(req.session.cookie)
                 console.log('================login')  
                 //clearCookie('cookies_to_client').cookie('cookies_to_client', req.cookies)
-                res.status(200).send(req.cookies)
+                res.status(200).cookie('cookies_to_client', 'new cookie').clearCookie('cookies_to_client').send('cookie has sent')
+
+                //res.status(200).send(req.cookies)
             } else {
                 res.status(400).send('password is incorrect')
             }
