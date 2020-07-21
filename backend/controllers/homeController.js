@@ -1,7 +1,9 @@
 
 exports.Home = (req, res) => {
-    console.log('======================')
+    console.log('================home')
     console.log(req.session.user)
+    console.log(req.cookies)
+    console.log('================home')
     if (req.session.user)
     {
         console.log('success')

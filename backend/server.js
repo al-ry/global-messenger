@@ -30,6 +30,8 @@ app.use(session({
     cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 } // 1 week
 }))
 
+
+
 app.use(loginRouter)
 app.use(registerRouter)
 app.use(findUserRouter)
@@ -39,4 +41,7 @@ app.use(addFriendRouter)
 
 app.listen('3000', () => {
     console.log('Server started on port 3000...')
+})
+app.get('/', (req,res) => {
+
 })

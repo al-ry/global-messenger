@@ -8,9 +8,13 @@ exports.Login = (req, res) => {
         {
             if(User.CheckPassword(userData.password, result.crypted_password, result.salt_password) == true)
             {
+                console.log('================login')
                 req.session.user = result
                 console.log(req.session.user)
-                res.status(200).send('You are logged in')
+                console.log(req.cookies)
+                console.log('================login')  
+                //clearCookie('cookies_to_client').cookie('cookies_to_client', req.cookies)
+                res.status(200).send(req.cookies)
             } else {
                 res.status(400).send('password is incorrect')
             }

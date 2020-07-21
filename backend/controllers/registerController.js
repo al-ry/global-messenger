@@ -8,6 +8,11 @@ exports.Register = (req, res) => {
             res.status(400).send('login is busy')
         } else {
             newUser.Register()
+            User.Find(newUser.telephone, function(newResult) {
+                req.session.user = newResult
+                console.log(newResult)
+                console.log(req.session.user)
+            })
             res.status(200).send('You are successfully registrated')
         }
     })
