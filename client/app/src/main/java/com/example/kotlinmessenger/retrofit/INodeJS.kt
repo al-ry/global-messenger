@@ -4,10 +4,7 @@ import io.reactivex.Observable
 import android.text.LoginFilter
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.http.Field
-import retrofit2.http.POST
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
+import retrofit2.http.*
 
 
 interface INodeJS {
@@ -23,5 +20,5 @@ interface INodeJS {
                       @Field("password") password: String): Observable<String>
 
     @POST("home")
-    fun CheckSession(): Observable<String>
+    fun CheckSession(@Header("Cookie") sessionIdAndToken: String ): Observable<String>
  }
