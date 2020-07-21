@@ -11,7 +11,7 @@ exports.Login = (req, res) => {
                 console.log('================login')
                 req.session.user = result
                 console.log(req.session.user)
-                console.log(req.cookies)
+                console.log(req.session.cookies)
                 console.log('================login')  
                 //clearCookie('cookies_to_client').cookie('cookies_to_client', req.cookies)
                 res.status(200).send(req.cookies)

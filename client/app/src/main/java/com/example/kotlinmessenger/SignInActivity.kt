@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kotlinmessenger.retrofit.CookiesManagement
 import com.example.kotlinmessenger.retrofit.INodeJS
 import com.example.kotlinmessenger.retrofit.RetrofitClient
 import com.google.gson.annotations.SerializedName
@@ -13,11 +14,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
-
 class SignInActivity: AppCompatActivity()
 {
-   lateinit var myApi:INodeJS
-   var compositeDisposable = CompositeDisposable()
+    lateinit var myApi:INodeJS
+    var compositeDisposable = CompositeDisposable()
+    private lateinit var cookiesManagement : CookiesManagement
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +26,7 @@ class SignInActivity: AppCompatActivity()
 
         val retrofit = RetrofitClient.instance
         val signInButton: Button = findViewById(R.id.sign_in_button)
+        cookiesManagement = CookiesManagement(applicationContext)
 
         myApi = retrofit.create(INodeJS::class.java)
         signInButton.setOnClickListener {
@@ -66,8 +68,12 @@ class SignInActivity: AppCompatActivity()
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 }
-                else
+                else {
                     Toast.makeText(this , message, Toast.LENGTH_LONG).show()
+                    cookiesManagement.PutCookie(message.toString())
+
+                }
+
             })
     }
 }
