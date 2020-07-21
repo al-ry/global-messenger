@@ -5,10 +5,10 @@ exports.Register = (req, res) => {
     var newUser = new User(userData.name, userData.telephone, userData.password);
     User.Find(userData.telephone, function(result) {
         if (result) {
-            res.send('login is busy')
+            res.status(400).send('login is busy')
         } else {
-            res.send('new login')
             newUser.Register()
+            res.status(200).send('You are successfully registrated')
         }
     })
 }

@@ -3,7 +3,6 @@ var User = require('../models/user.js')
 
 exports.Login = (req, res) => {
     var userData = req.body
-
     User.Find(userData.telephone, function(result) {
         if (result)
         {
@@ -11,12 +10,12 @@ exports.Login = (req, res) => {
             {
                 req.session.user = result
                 console.log(req.session.user)
-                res.send('You are logged in')
+                res.status(200).send('You are logged in')
             } else {
-                res.send('password is incorrect')
+                res.status(400).send('password is incorrect')
             }
         } else {
-            res.send('login is incorrect')
+            res.status(400).send('login is incorrect')
         }
     })
 }

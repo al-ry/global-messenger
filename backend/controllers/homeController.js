@@ -5,10 +5,9 @@ exports.Home = (req, res) => {
     if (req.session.user)
     {
         console.log('success')
-        res.send('success')
+        res.status(200).send('success')
     } else {
         console.log('fail')
-        res.send('fail')
+        res.status(400).send('fail')
     }
-    req.session.destroy();
 }

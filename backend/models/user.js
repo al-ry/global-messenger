@@ -30,11 +30,11 @@ module.exports = class User {
         }
         return false;
     } 
-    static async GetAll(callback)  
-    {
-        await db.all('SELECT telephone, name FROM user', function(err, result) {
-            if (err) throw err
-            callback(result)
-        })
-    }
+    // static async GetAll(callback)  
+    // {
+    //     db.all('SELECT telephone, name FROM user', await  function(err, result) {
+    //         if (err) throw err
+    //         callback(result)
+    //     })
+    // }
 }
