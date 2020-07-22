@@ -18,7 +18,7 @@ exports.Login = (req, res) => {
                 req.cookies['connect.sid'] = newCookie
                 console.log('================login')
                 //clearCookie('cookies_to_client').cookie('cookies_to_client', req.cookies)
-                res.status(200).send(req.cookies)
+                res.status(200).json(req.cookies)
 
                 //res.status(200).send(req.cookies)
             } else {
