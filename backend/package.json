@@ -23,7 +23,7 @@
     "nock": "^13.0.2"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -34,8 +34,8 @@
   "bugs": {
     "url": "https://github.com/al-ry/global-messenger/issues"
   },
-  "homepage": "https://github.com/al-ry/global-messenger#readme",
-  
+  "homepage": "https://github.com/al-ry/global-messenger#readme"
+
 }
 
 
