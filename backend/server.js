@@ -13,9 +13,7 @@ var addFriendRouter = require('./routes/addFriendRouter')
 var cookie = require('cookie-signature');
 var SQLiteStore = require('connect-sqlite3')(session)
 var cors = require('cors')
-
-
-const COOKIE_SECRET = 'any secret string'
+var globals = require('./config/globals')
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
@@ -23,7 +21,7 @@ app.set('trust proxy', 1);
 app.use(cors({ credentials: true, origin: true }))
 app.use(cookieParser())
 app.use(session({
-    secret: COOKIE_SECRET,
+    secret: globals.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
     store: new SQLiteStore,
