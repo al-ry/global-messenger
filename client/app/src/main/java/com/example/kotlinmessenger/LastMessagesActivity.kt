@@ -64,7 +64,7 @@ class LastMessagesActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 cookiesManagement.DeleteCookie()
-                Toast.makeText(this@LastMessagesActivity, "You have sign out",
+                Toast.makeText(this@LastMessagesActivity, "You have just signed out",
                     Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this@LastMessagesActivity,
                     SignInActivity::class.java))
