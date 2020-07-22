@@ -21,7 +21,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 class SignInActivity: AppCompatActivity()
 {
     private lateinit var myApi: INodeJS
-    //var compositeDisposable = CompositeDisposable()
     private lateinit var cookiesManagement : CookiesManagement
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,13 +69,7 @@ class SignInActivity: AppCompatActivity()
             startActivity(intent)
         }
     }
-    //            val info = CheckUserInfo(sign_in_phone_field.text.toString(),
-//                sign_in_password_field.text.toString())
-//
-//            if (info.isNotEmpty())
-//            {
-//                //LogIn(info)
-//            }
+
     private fun CheckUserInfo(phone: String, password: String) : List<String>
     {
         if (phone.isEmpty() || password.isEmpty())
@@ -87,26 +80,4 @@ class SignInActivity: AppCompatActivity()
 
         return listOf(phone, password)
     }
-
-//    private fun LogIn(userInfo : List<String>)
-//    {
-//
-//        compositeDisposable.add(myApi.LogInUser(userInfo[0], userInfo[1])
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe{message ->
-//                if (message == "user successfully registrated") {
-//                    Toast.makeText(this, "Login success", Toast.LENGTH_LONG).show()
-//                    val intent = Intent(this, LatestMessagesActivity::class.java)
-//                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                    startActivity(intent)
-//                }
-//                else {
-//                    Toast.makeText(this , message, Toast.LENGTH_LONG).show()
-//                    cookiesManagement.PutCookie(message.toString())
-//
-//                }
-//
-//            })
-//    }
 }

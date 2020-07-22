@@ -11,7 +11,7 @@ interface INodeJS {
     @FormUrlEncoded
     fun RegisterUser(@Field("name") username: String,
                      @Field("telephone") phone: String,
-                     @Field("password") password: String): Observable<String>
+                     @Field("password") password: String): Call<CookieStorage>
 
     @POST("login")
     @FormUrlEncoded
