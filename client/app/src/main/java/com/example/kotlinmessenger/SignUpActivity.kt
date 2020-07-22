@@ -10,7 +10,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_sign_in.*
 
 class SignUpActivity : AppCompatActivity()
 {
@@ -63,7 +62,7 @@ class SignUpActivity : AppCompatActivity()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe{
                     message ->
-                if (message == "new login")
+                if (message == "You are successfully registrated")
                 {
                     Toast.makeText(this, "Successed registration", Toast.LENGTH_LONG).show()
                     val intent = Intent(this, SignInActivity::class.java)

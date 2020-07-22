@@ -1,12 +1,9 @@
 package com.example.kotlinmessenger.retrofit
 
 import retrofit2.Retrofit
-import com.google.gson.Gson;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-
-import io.reactivex.Observable
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object RetrofitClient {
     private var ourInstance:Retrofit ?= null;
