@@ -71,8 +71,5 @@ class LastMessagesActivity : AppCompatActivity() {
             }
 
         })
-
-
-
     }
 }
