@@ -10,12 +10,12 @@ var findUserRouter = require('./routes/findUserRouter')
 var homeRouter = require('./routes/homeRouter')
 var logoutRouter = require('./routes/logoutRouter')
 var addFriendRouter = require('./routes/addFriendRouter')
-
+var cookie = require('cookie-signature');
 var SQLiteStore = require('connect-sqlite3')(session)
 var cors = require('cors')
 
 
-
+const COOKIE_SECRET = 'any secret string'
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
@@ -23,11 +23,11 @@ app.set('trust proxy', 1);
 app.use(cors({ credentials: true, origin: true }))
 app.use(cookieParser())
 app.use(session({
-    secret: 'any secret string',
+    secret: COOKIE_SECRET,
     resave: true,
     saveUninitialized: true,
     store: new SQLiteStore,
-    cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 } // 1 week
+    cookie: { maxAge: 7 * 24 * 60 * 60 * 1000, secure: true } // 1 week
 }))
 
 
