@@ -20,5 +20,5 @@ interface INodeJS {
                       @Field("password") password: String): Observable<String>
 
     @POST("home")
-    fun CheckSession(@Header("Cookie") sessionIdAndToken: String ): Observable<String>
+    fun CheckSession(@Header("Cookie") sessionIdAndToken: String? ): Observable<String>
  }
