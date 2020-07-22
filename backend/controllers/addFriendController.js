@@ -1,7 +1,8 @@
-
+var User = require('../models/user.js')
 
 exports.Add = (req, res) => {
-    var userPhone = req.query
-    
-    console.log(req.sesion.user)
+    var userData = req.query
+    console.log(userData.userId, userData.friendId)
+    User.AddFriend(userData.userId, userData.friendId)
+    res.send('added')
  }

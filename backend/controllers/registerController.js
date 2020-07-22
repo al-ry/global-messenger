@@ -1,4 +1,5 @@
 var User = require('../models/user.js')
+var cookieUtil = require('../utils/cookieUtil')
 
 exports.Register = (req, res) => {
     var userData = req.body
@@ -10,10 +11,10 @@ exports.Register = (req, res) => {
             newUser.Register()
             User.Find(newUser.telephone, function(newResult) {
                 req.session.user = newResult
-                console.log(newResult)
-                console.log(req.session.user)
+                var newCookie = cookieUtil.SignCookie(req.sessionID);
+                req.cookies['connect.sid'] = newCookie
+                res.status(200).json(req.cookies)
             })
-            res.status(200).send('You are successfully registrated')
         }
     })
 }
