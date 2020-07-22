@@ -13,7 +13,7 @@ module.exports = class User {
         var hashData = passwordUtil.SaltHashPassword(this.password)
         var prep = db.prepare('INSERT INTO user(telephone, name, crypted_password, salt_password)'
          + 'VALUES (?, ?, ?, ?)')
-        await prep.run(this.telephone, this.name, hashData.passwordHash, hashData.salt)
+        prep.run(this.telephone, this.name, hashData.passwordHash, hashData.salt)
     }
 
     static Find(telephone, callback) {
