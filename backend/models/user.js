@@ -11,16 +11,20 @@ module.exports = class User {
     }
     Register() {
         var hashData = passwordUtil.SaltHashPassword(this.password)
-        var prep = db.prepare('INSERT INTO user(telephone, name, crypted_password, salt_password)'
-         + 'VALUES (?, ?, ?, ?)')
-        prep.run(this.telephone, this.name, hashData.passwordHash, hashData.salt)
+        db.serialize(() => {
+            var prep = db.prepare('INSERT INTO user(telephone, name, crypted_password, salt_password)'
+            + 'VALUES (?, ?, ?, ?);')
+            prep.run(this.telephone, this.name, hashData.passwordHash, hashData.salt)
+        })
     }
-
-    static Find(telephone, callback) {
-        var prep = db.prepare('SELECT * FROM user WHERE telephone = ?')  
-        prep.get(telephone, function(err, result) {
-            if (err) throw err
-            callback(result)
+    static Find(telephone) {
+        return new Promise((resolve) => {
+            db.serialize(() => {
+                var prep = db.prepare('SELECT * FROM user WHERE telephone = ?;')
+                prep.get(telephone, (err, result) => {
+                    resolve(result);
+                })
+            })
         })
     }  
     static CheckPassword(password, encryptedPassword, salt) {
@@ -30,16 +34,32 @@ module.exports = class User {
         }
         return false
     } 
-    static AddFriend(userId, friendId) {
-        var prep = db.prepare('SELECT * FROM user_has_friend WHERE (id_user = ?) AND (id_friend = ?)')
-        prep.get(userId, friendId, function(result, err) {
-            
+    static AddChat(userId, friendId) {
+        return new Promise((resolve) => {
+            db.serialize(() => {
+                var prep = db.prepare('SELECT * FROM user_has_friend WHERE (id_user = ?) AND (id_friend = ?);')
+                prep.get(userId, friendId, (err, result) => {
+                    if (result) {
+                        resolve(false)
+                    } else {
+                        var prep = db.prepare('INSERT INTO user_has_friend(id_user, id_friend) VALUES (?, ?);')
+                        prep.run(userId, friendId)
+                        resolve(true)                       
+                    }
+                })
+            })
         })
-        var prep = db.prepare('INSERT INTO user_has_friend(id_user, id_friend)'
-        + 'VALUES (?, ?)')
-      prep.run(userId, friendId)
     }
-    static async GetFriendList(userId) {
-
+    static GetChatList(userId) {
+        var prepSql = db.prepare('SELECT user.name, user.telephone FROM user\n' +
+        'INNER JOIN user_has_friend ON user_has_friend.id_friend = user.id_user\n' +
+        'WHERE user_has_friend.id_user = ?;\n')
+        return new Promise((resolve) => {
+            db.serialize(() => {
+                prepSql.all(userId, (err, result) => {
+                    resolve(result)
+                })
+            })
+        })
     }
 }

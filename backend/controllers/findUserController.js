@@ -3,7 +3,7 @@ var User = require('../models/user.js')
 exports.FindOne = (req, res) => {
     var userData = req.query
     console.log(req.query)
-    User.Find(userData.telephone, (result) => {
+    User.Find(userData.telephone).then((result) => {
         if (result)
         {
             res.status(200).json(result)
