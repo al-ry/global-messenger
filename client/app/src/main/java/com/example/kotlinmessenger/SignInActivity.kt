@@ -46,7 +46,7 @@ class SignInActivity: AppCompatActivity()
                 {
                     if  (response.code() == 400)
                     {
-                        Toast.makeText(this@SignInActivity, "Incorrect data",
+                        Toast.makeText(this@SignInActivity, "User not found",
                             Toast.LENGTH_LONG).show()
                     }
                     else

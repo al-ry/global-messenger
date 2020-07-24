@@ -30,6 +30,7 @@ class LoadingActivity : AppCompatActivity() {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
+
         myApi = retrofit.create(INodeJS::class.java)
 
         val cookies =  "connect.sid=" + cookiesManagement.GetCookie()
@@ -37,16 +38,11 @@ class LoadingActivity : AppCompatActivity() {
         compositeDisposable.add(myApi.CheckSession(cookies)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe{message ->
-                if (message == "success") {
-                    Toast.makeText(this , "Все по кайфу", Toast.LENGTH_LONG).show()
+            .subscribe{ message ->
+                if (message == "success")
                     startActivity(Intent(this, LastMessagesActivity::class.java))
-                }
                 else
-                {
-                    Toast.makeText(this , "Вы обосрались, Станислав, помойте жопу", Toast.LENGTH_LONG).show()
                     startActivity(Intent(this, SignInActivity::class.java))
-                }
             })
     }
 }
