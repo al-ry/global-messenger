@@ -6,10 +6,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.example.kotlinmessenger.Response.CookieStorage
 import com.example.kotlinmessenger.retrofit.CookiesManagement
 import com.example.kotlinmessenger.retrofit.INodeJS
-import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,7 +25,9 @@ class LastMessagesActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.menu_new_message -> {
-                Toast.makeText(this, "Creating a new message", Toast.LENGTH_SHORT).show()
+                startActivity(
+                    Intent(this@LastMessagesActivity,
+                        FindUserActivity::class.java))
             }
             R.id.menu_sign_out -> {
                 SignOut()
