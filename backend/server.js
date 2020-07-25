@@ -6,11 +6,11 @@ var cookieParser = require('cookie-parser')
 
 var registerRouter = require('./routes/registerRouter')
 var loginRouter = require('./routes/loginRouter')
-var findUserRouter = require('./routes/findUserRouter')
+var searchRouter = require('./routes/searchRouter')
 var homeRouter = require('./routes/homeRouter')
 var logoutRouter = require('./routes/logoutRouter')
-var addFriendRouter = require('./routes/addFriendRouter')
-var cookie = require('cookie-signature');
+var addChatRouter = require('./routes/addChatRouter')
+var deleteChatRouter = require('./routes/deleteChatRouter')
 var SQLiteStore = require('connect-sqlite3')(session)
 var cors = require('cors')
 var globals = require('./config/globals')
@@ -28,14 +28,13 @@ app.use(session({
     cookie: { maxAge: 7 * 24 * 60 * 60 * 1000, secure: true } // 1 week
 }))
 
-
-
 app.use(loginRouter)
 app.use(registerRouter)
-app.use(findUserRouter)
+app.use(searchRouter)
 app.use(homeRouter)
 app.use(logoutRouter)
-app.use(addFriendRouter)
+app.use(addChatRouter)
+app.use(deleteChatRouter)
 
 app.listen('3000', () => {
     console.log('Server started on port 3000...')
