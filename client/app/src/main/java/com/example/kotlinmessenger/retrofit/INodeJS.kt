@@ -2,7 +2,6 @@ package com.example.kotlinmessenger.retrofit
 
 import com.example.kotlinmessenger.Response.CookieStorage
 import com.example.kotlinmessenger.Response.User
-import com.example.kotlinmessenger.Response.UsersList
 import io.reactivex.Observable
 import retrofit2.http.*
 import retrofit2.Call
@@ -20,13 +19,13 @@ interface INodeJS {
     fun LogInUser(@Field("telephone") phone: String,
                       @Field("password") password: String): Call<CookieStorage>
 
-    @POST("home")
-    fun CheckSession(@Header("Cookie") sessionIdAndToken: String? ): Observable<String>
+    @GET("home")
+    fun CheckSession(@Header("Cookie") sessionIdAndToken: String? ): Call<Void>
 
     @GET("logout")
     fun LogOut(@Header("Cookie") sessionIdAndToken : String) : Call<Void>
 
-    @GET("findUser")
-    fun FindUser (@Query("telephone") phone : String) : Call<User>
+    @GET("search")
+    fun FindUser (@Query("telephone") phone : String) : Call<List<User>>
 
  }

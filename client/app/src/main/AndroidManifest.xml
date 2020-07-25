@@ -14,17 +14,29 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".FindUserActivity"
-            android:label="Find user"
-            android:parentActivityName="com.example.kotlinmessenger.LastMessagesActivity">
+
+        <activity android:name=".ChatLogActivity"
+            android:parentActivityName=".LastMessagesActivity"
+            android:label="username">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.kotlinmessenger.LastMessagesActivity" />
         </activity>
+
+        <activity
+            android:name=".FindUserActivity"
+            android:label="Find user"
+            android:parentActivityName=".LastMessagesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.kotlinmessenger.LastMessagesActivity" />
+        </activity>
+
         <activity
             android:name=".LastMessagesActivity"
             android:label="Last messages" />
-        <activity android:name=".SignInActivity" />
+        <activity android:name=".SignInActivity"/>
+
         <activity android:name=".LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +44,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity" />
-    </application>
 
+        <activity
+            android:name=".SignUpActivity"
+            android:parentActivityName=".SignInActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.kotlinmessenger.SignInActivity" />
+        </activity>
+
+    </application>
 </manifest>

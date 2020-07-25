@@ -1,21 +1,17 @@
 package com.example.kotlinmessenger.Response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
-
-data class User (
+@Parcelize
+data class User(
     @SerializedName("id_user")
-    val id : String,
+    val id : String = "",
 
     @SerializedName("telephone")
-    val telephone : String,
+    val telephone : String = "",
 
     @SerializedName("name")
-    val name : String,
-
-    @SerializedName("crypted_password")
-    val password : String,
-
-    @SerializedName("salt_password")
-    val salt_password : String
-)
+    val name : String = ""
+) : Parcelable

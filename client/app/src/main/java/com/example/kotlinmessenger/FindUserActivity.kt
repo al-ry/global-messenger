@@ -1,29 +1,16 @@
 package com.example.kotlinmessenger
 
 import android.content.Intent
-import android.hardware.usb.UsbRequest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.SearchView
 import android.widget.Toast
-import androidx.core.view.MenuItemCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.kotlinmessenger.Response.CookieStorage
 import com.example.kotlinmessenger.Response.User
-import com.example.kotlinmessenger.Response.UsersList
 import com.example.kotlinmessenger.retrofit.INodeJS
-import com.google.gson.Gson
-import com.nineoldandroids.view.ViewHelper
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_find_user.*
-import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.found_user_row.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,7 +18,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class FindUserActivity : AppCompatActivity() {
     private lateinit var myApi: INodeJS
@@ -47,27 +33,39 @@ class FindUserActivity : AppCompatActivity() {
         myApi = retrofit.create(INodeJS::class.java)
 
         var call = myApi.FindUser(phone).also {
-            it.enqueue(object : Callback<User> {
-                override fun onResponse(all: Call<User>, response: Response<User>) {
+            it.enqueue(object : Callback<List<User>> {
+                override fun onResponse(all: Call<List<User>>, response: Response<List<User>>) {
                     val body = response.body()
 
                     if (body != null) {
-                        this@FindUserActivity.RenderSearchResult(body)
+                            if (body.isNotEmpty())
+                                this@FindUserActivity.RenderSearchResult(body)
+                            else
+                                Toast.makeText(this@FindUserActivity, "There are no matches", Toast.LENGTH_SHORT).show()
                     }
                 }
 
-                override fun onFailure(call: Call<User>, t: Throwable) {
-                    println("123123123123123123123123123")
+                override fun onFailure(call: Call<List<User>>, t: Throwable) {
+                    Toast.makeText(this@FindUserActivity, "Fail with search", Toast.LENGTH_SHORT).show()
                 }
             })
         }
     }
 
-    fun RenderSearchResult(user : User) {
+    fun RenderSearchResult(userList : List<User>) {
         val adapter = GroupAdapter<GroupieViewHolder>()
-
-        adapter.add(UserHolder(user))
         recycle_view_found_user.adapter = adapter
+//        adapter.add(UserHolder(userList.first()))
+        for (user in userList) {
+            adapter.add(UserHolder(user))
+        }
+        
+        adapter.setOnItemClickListener{ item, view ->
+            val userItem = item as UserHolder
+            val intent = Intent(view.context, ChatLogActivity::class.java)
+            intent.putExtra("user", userItem.user)
+            startActivity(intent)
+        }
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {

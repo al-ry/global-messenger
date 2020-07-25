@@ -11,11 +11,13 @@
         android:id="@+id/user_phone_for_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hint="Enter phone"
         app:layout_constraintEnd_toStartOf="@+id/find_user_button"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints,UnknownId"
-        tools:layout_editor_absoluteY="40dp" />
+        tools:layout_editor_absoluteY="40dp"
+        android:singleLine="true"/>
 
     <Button
         android:id="@+id/find_user_button"
@@ -26,17 +28,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteY="40dp" />
-
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_phone_for_search"
-        tools:layout_editor_absoluteX="1dp">
-
-
-    </ScrollView>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
