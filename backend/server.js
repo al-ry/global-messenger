@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser')
 
 var registerRouter = require('./routes/registerRouter')
 var loginRouter = require('./routes/loginRouter')
-var findUserRouter = require('./routes/findUserRouter')
+var searchRouter = require('./routes/searchRouter')
 var homeRouter = require('./routes/homeRouter')
 var logoutRouter = require('./routes/logoutRouter')
 var addChatRouter = require('./routes/addChatRouter')
@@ -28,11 +28,9 @@ app.use(session({
     cookie: { maxAge: 7 * 24 * 60 * 60 * 1000, secure: true } // 1 week
 }))
 
-
-
 app.use(loginRouter)
 app.use(registerRouter)
-app.use(findUserRouter)
+app.use(searchRouter)
 app.use(homeRouter)
 app.use(logoutRouter)
 app.use(addChatRouter)

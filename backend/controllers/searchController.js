@@ -1,9 +1,9 @@
 var User = require('../models/user.js')
 
-exports.FindOne = (req, res) => {
-    var userData = req.query
+exports.Search = (req, res) => {
+    var searchData = req.query
     console.log(req.query)
-    User.Find(userData.telephone).then((result) => {
+    User.Search(searchData.telephone).then((result) => {
         if (result)
         {
             res.status(200).json(result)

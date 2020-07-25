@@ -1,5 +1,8 @@
 var User = require('../models/user.js')
 
 exports.Delete = (req, res) => {
-    console.log('deleting chats is here')
+    var params = req.query
+    User.DeleteChat(params.userId, params.friendId).then(() => {
+        res.status(200).send('Chat successfully deleted')
+    })
 }

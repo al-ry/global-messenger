@@ -4,12 +4,12 @@ var cookieUtil = require('../utils/cookieUtil')
 exports.Register = (req, res) => {
     var userData = req.body
     var newUser = new User(userData.name, userData.telephone, userData.password);
-    User.Find(userData.telephone).then((result) => {
+    User.FindOne(newUser.telephone).then((result) => {
         if (result) {
             res.status(400).send('login is busy')
         } else {
             newUser.Register()
-            User.Find(newUser.telephone, function(newResult) {
+            User.FindOne(newUser.telephone).then(newResult => {
                 req.session.user = newResult
                 var newCookie = cookieUtil.SignCookie(req.sessionID);
                 req.cookies['connect.sid'] = newCookie
