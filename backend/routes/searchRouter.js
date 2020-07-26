@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const searchUserRouter = Router()
-const findUserController = require('../controllers/searchController')
+const searchUserController = require('../controllers/searchController')
 
-searchUserRouter.get('/search', findUserController.Search)
+searchUserRouter.get('/search', searchUserController.Search)
 
 module.exports = searchUserRouter

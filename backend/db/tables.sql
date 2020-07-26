@@ -30,3 +30,12 @@ CREATE INDEX ix_id_user_id_friend_user_has_friend
 ON user_has_friend (id_user, id_friend);
 
 
+INSERT INTO user_has_friend(id_user, id_friend) VALUES ('q', 654654);
+
+SELECT userId, friendId FROM
+(SELECT user.id_user AS userId, id_friend AS friendId FROM user 
+INNER JOIN user_has_friend ON user.id_user = user_has_friend.id_user
+WHERE user.telephone = 'q')
+INNER JOIN user ON user.id_user = friendId
+WHERE telephone = '11'
+
