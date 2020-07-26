@@ -1,4 +1,4 @@
-package com.example.kotlinmessenger.Response
+package com.example.kotlinmessenger.storage
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

@@ -4,15 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
-import com.example.kotlinmessenger.Response.CookieStorage
-import com.example.kotlinmessenger.retrofit.CookiesManagement
+import com.example.kotlinmessenger.storage.CookieStorage
 import com.example.kotlinmessenger.retrofit.INodeJS
 import com.example.kotlinmessenger.retrofit.RetrofitClient
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.example.kotlinmessenger.storage.StorageManager
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SignUpActivity : AppCompatActivity()
 {
     lateinit var myApi:INodeJS
-    private lateinit var cookiesManagement : CookiesManagement
+    private lateinit var storageManager : StorageManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,18 +31,18 @@ class SignUpActivity : AppCompatActivity()
         myApi = retrofit.create(INodeJS::class.java)
 
         signUpButton.setOnClickListener{
-            val info = CheckUserInfo(sign_up_username_field.text.toString(),
+            val info = checkUserInfo(sign_up_username_field.text.toString(),
             sign_up_phone_field.text.toString(), sign_up_password_field.text.toString(),
                 sign_up_password_repeat_field.text.toString())
 
             if (info.isNotEmpty())
             {
-                Registrate(info)
+                registrate(info)
             }
         }
     }
 
-    private fun Registrate(userInfo : List<String>)
+    private fun registrate(userInfo : List<String>)
     {
         val retrofit = Retrofit.Builder()
             .baseUrl("http://10.0.2.2:3000/")
@@ -54,10 +50,10 @@ class SignUpActivity : AppCompatActivity()
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        cookiesManagement = CookiesManagement(applicationContext)
+        storageManager = StorageManager(applicationContext)
         myApi = retrofit.create(INodeJS::class.java)
 
-        var call = myApi.RegisterUser(userInfo[0], userInfo[1], userInfo[2])
+        var call = myApi.registerUser(userInfo[0], userInfo[1], userInfo[2])
 
         call.enqueue(object : Callback<CookieStorage> {
             override fun onResponse(all: Call<CookieStorage>, response: Response<CookieStorage>)
@@ -67,7 +63,7 @@ class SignUpActivity : AppCompatActivity()
                         Toast.LENGTH_LONG).show()
                 else
                 {
-                    cookiesManagement.PutCookie(response.body()!!.cookie.toString());
+                    storageManager.putData("cookies", response.body()!!.cookie.toString());
                     startActivity(Intent(this@SignUpActivity, LastMessagesActivity::class.java))
                 }
             }
@@ -79,7 +75,7 @@ class SignUpActivity : AppCompatActivity()
         })
     }
 
-    private fun CheckUserInfo(username: String, phone: String,
+    private fun checkUserInfo(username: String, phone: String,
                               password: String, repeatPassword : String) : List<String>
     {
         if (phone.isEmpty() || username.isEmpty() || password.isEmpty())

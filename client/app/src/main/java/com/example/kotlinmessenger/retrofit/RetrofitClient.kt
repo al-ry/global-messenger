@@ -9,7 +9,8 @@ object RetrofitClient {
     private var ourInstance:Retrofit ?= null;
     val instance : Retrofit
         get() {
-            if (ourInstance == null) ourInstance = Retrofit.Builder()
+            if (ourInstance == null)
+                ourInstance = Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:3000/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(ScalarsConverterFactory.create())

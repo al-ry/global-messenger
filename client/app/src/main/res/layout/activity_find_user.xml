@@ -9,25 +9,20 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/user_phone_for_search"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:hint="Enter phone"
+        android:inputType="phone"
+        android:singleLine="true"
         app:layout_constraintEnd_toStartOf="@+id/find_user_button"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints,UnknownId"
-        tools:layout_editor_absoluteY="40dp"
-        android:singleLine="true"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints,UnknownId" />
 
-    <Button
-        android:id="@+id/find_user_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:text="search"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="40dp" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
