@@ -6,8 +6,17 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.example.kotlinmessenger.retrofit.CookiesManagement
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.storage.StorageManager
+import com.example.kotlinmessenger.storage.User
+import com.example.kotlinmessenger.storage.UserHolder
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
+import kotlinx.android.synthetic.main.activity_find_user.*
+import kotlinx.android.synthetic.main.activity_last_messages.*
+import kotlinx.android.synthetic.main.found_chat_row.view.*
+import kotlinx.android.synthetic.main.found_user_row.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,6 +30,34 @@ class LastMessagesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_last_messages)
     }
+
+    override fun onStart() {
+        super.onStart()
+        setContentView(R.layout.activity_last_messages)
+
+        renderSearchResult(listOf(
+            User("13", "89000", "Stas"),
+            User("14", "99999", "kaka")
+        ))
+
+    }
+
+    fun renderSearchResult(userList: List<User>) {
+        val adapter = GroupAdapter<GroupieViewHolder>()
+        recycle_view_messages.adapter = adapter
+
+        for (user in userList) {
+            adapter.add(MessageHolder(user))
+        }
+
+        adapter.setOnItemClickListener{ item, view ->
+            val userItem = item as MessageHolder
+            val intent = Intent(view.context, ChatLogActivity::class.java)
+            intent.putExtra("user", userItem.user)
+            startActivity(intent)
+        }
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
@@ -50,26 +87,40 @@ class LastMessagesActivity : AppCompatActivity() {
             .build()
 
         val myApi = retrofit.create(INodeJS::class.java)
-        val cookiesManagement = CookiesManagement(applicationContext)
-        val cookies =  "connect.sid=" + cookiesManagement.GetCookie()
+        val storageManager =
+            StorageManager(
+                applicationContext
+            )
+        val cookies =  "connect.sid=" + storageManager.getData("cookies")
 
-        var call = myApi.LogOut(cookies)
+        var call = myApi.logOut(cookies)
 
         call.enqueue(object : Callback<Void> {
-
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 Toast.makeText(this@LastMessagesActivity,
                     "Problems with logging out", Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                cookiesManagement.DeleteCookie()
+                storageManager.deleteData("cookies")
+                storageManager.deleteData("phone")
                 Toast.makeText(this@LastMessagesActivity, "You have just signed out",
                     Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this@LastMessagesActivity,
                     SignInActivity::class.java))
             }
-
         })
     }
+}
+
+class  MessageHolder(val user: User) : Item<GroupieViewHolder>()
+{
+    override fun getLayout(): Int {
+        return R.layout.found_chat_row
+    }
+
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+        viewHolder.itemView.char_username.text = user.name
+    }
+
 }

@@ -1,31 +1,35 @@
 package com.example.kotlinmessenger.retrofit
 
-import com.example.kotlinmessenger.Response.CookieStorage
-import com.example.kotlinmessenger.Response.User
-import io.reactivex.Observable
+import com.example.kotlinmessenger.storage.CookieStorage
+import com.example.kotlinmessenger.storage.User
 import retrofit2.http.*
 import retrofit2.Call
-
 
 interface INodeJS {
     @POST("register")
     @FormUrlEncoded
-    fun RegisterUser(@Field("name") username: String,
+    fun registerUser(@Field("name") username: String,
                      @Field("telephone") phone: String,
                      @Field("password") password: String): Call<CookieStorage>
 
     @POST("login")
     @FormUrlEncoded
-    fun LogInUser(@Field("telephone") phone: String,
-                      @Field("password") password: String): Call<CookieStorage>
+    fun logInUser(@Field("telephone") phone: String,
+                  @Field("password") password: String): Call<CookieStorage>
 
     @GET("home")
-    fun CheckSession(@Header("Cookie") sessionIdAndToken: String? ): Call<Void>
+    fun checkSession(@Header("Cookie") sessionIdAndToken: String? ): Call<User>
 
     @GET("logout")
-    fun LogOut(@Header("Cookie") sessionIdAndToken : String) : Call<Void>
+    fun logOut(@Header("Cookie") sessionIdAndToken: String) : Call<Void>
 
     @GET("search")
-    fun FindUser (@Query("telephone") phone : String) : Call<List<User>>
+    fun findUser (@Query("telephone") phone: String) : Call<List<User>>
+
+    @GET("addChat")
+    fun addChat(
+        @Query("userPhone") userPhone: String,
+        @Query("friendPhone") friendPhone: String
+    ) : Call<Void>
 
  }
