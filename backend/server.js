@@ -1,9 +1,10 @@
 var express = require('express')
 var session = require('express-session')
-var app = express()
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
-
+var SQLiteStore = require('connect-sqlite3')(session)
+var cors = require('cors')
+var globals = require('./config/globals')
 var registerRouter = require('./routes/registerRouter')
 var loginRouter = require('./routes/loginRouter')
 var searchRouter = require('./routes/searchRouter')
@@ -12,9 +13,10 @@ var logoutRouter = require('./routes/logoutRouter')
 var addChatRouter = require('./routes/addChatRouter')
 var userChatsRouter = require('./routes/userChatsRouter')
 var deleteChatRouter = require('./routes/deleteChatRouter')
-var SQLiteStore = require('connect-sqlite3')(session)
-var cors = require('cors')
-var globals = require('./config/globals')
+
+var app = express()
+var server = require('http').Server(app)
+
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
@@ -36,11 +38,22 @@ app.use(homeRouter)
 app.use(logoutRouter)
 app.use(addChatRouter)
 app.use(deleteChatRouter)
+<<<<<<< Updated upstream
 app.use(userChatsRouter)
+=======
+app.get('/', (req,res) => {
+    console.log('hi')
+    res.send('hi')
+})
+>>>>>>> Stashed changes
 
-app.listen('3000', () => {
+server = app.listen(3000, () => {
     console.log('Server started on port 3000...')
 })
-app.get('/', (req,res) => {
 
+const io = require("socket.io")(server)
+
+io.on('connection', (socket) => {
+    console.log('User connected')
+    console.log('User connected', socket.id)
 })
