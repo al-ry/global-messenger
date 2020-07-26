@@ -34,11 +34,9 @@ class LastMessagesActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         setContentView(R.layout.activity_last_messages)
+        val user = intent.getParcelableExtra<User>("currentUser")
 
-        renderSearchResult(listOf(
-            User("13", "89000", "Stas"),
-            User("14", "99999", "kaka")
-        ))
+        renderSearchResult(listOf(user))
 
     }
 
@@ -100,7 +98,6 @@ class LastMessagesActivity : AppCompatActivity() {
                 Toast.makeText(this@LastMessagesActivity,
                     "Problems with logging out", Toast.LENGTH_SHORT).show()
             }
-
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 storageManager.deleteData("cookies")
                 storageManager.deleteData("phone")

@@ -41,8 +41,12 @@ class LoadingActivity : AppCompatActivity() {
         call.enqueue(object : Callback<User> {
             override fun onResponse(all: Call<User>, response: Response<User>)
             {
-                if  (response.code() == 200)
-                    startActivity(Intent(this@LoadingActivity, LastMessagesActivity::class.java))
+                if  (response.code() == 200) {
+                    val body = response.body()
+                    val intent = Intent(this@LoadingActivity, LastMessagesActivity::class.java)
+                    intent.putExtra("currentUser", body)
+                    startActivity(intent)
+                }
                 else
                     startActivity(Intent(this@LoadingActivity, SignInActivity::class.java))
             }
