@@ -1,8 +1,5 @@
 var passwordUtil = require('../utils/passwordUtil')
 var dbHelper = require('../db/database')
-const { GetHome } = require('../controllers/homeController')
-const { GetUserIdByNumber } = require('../db/database')
-
 
 module.exports = class User {
   
@@ -36,23 +33,25 @@ module.exports = class User {
         }
         return false
     } 
-    static AddChat(userId, friendId) {
-        console.log(userId, friendId)
+    static AddChat(userPhone, friendPhone) {
+        console.log(userPhone, friendPhone)
         return new Promise((resolve) => {
-            dbHelper.CheckHasChat(userId, friendId).then((hasChat) => {
+            dbHelper.CheckHasChat(userPhone, friendPhone).then((hasChat, result) => {
                 if (hasChat) {
                     resolve(false)
                 } else {
-                    dbHelper.InsertNewChat(userId, friendId) 
-                    resolve(true)
+                    dbHelper.GetUsersIdByNumber(userPhone, friendPhone).then(result => {
+                        dbHelper.InsertNewChat(result.userId, result.friendId) 
+                        resolve(true)
+                    })
                 }
             })
         })
     }
 
-    static GetChatList(userId) {
+    static GetChatList(userPhone) {
         return new Promise((resolve) => {
-            dbHelper.GetChatList(userId).then((result) => {
+            dbHelper.GetChatList(userPhone).then((result) => {
                 resolve(result)
             })
         })

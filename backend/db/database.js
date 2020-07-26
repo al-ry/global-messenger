@@ -35,34 +35,45 @@ var GetUsersInfoByNumber = function(telephone) {
     })
 }
 
-var GetUserIdByNumber = function(userPhone) {
+var GetUsersIdByNumber = function(userPhone, friendPhone) {
     return new Promise(resolve => {
         db.serialize(() => {
-            db.get('SELECT id_user FROM user WHERE telephone = ?;', userPhone, (err,result) => {
-                resolve(result)
+            var prep = db.prepare('')
+            db.get('SELECT id_user FROM user WHERE telephone = ?;', userPhone, (err, user) => {
+                db.get('SELECT id_user FROM user WHERE telephone = ?;', friendPhone, (err, friend) => {
+                    var usersIds = {userId: user.id_user, friendId: friend.id_user}
+                    resolve(usersIds)
+                })
             })
         })
     })
 }
 
-var GetChatList = function(userId) {
-    var prepSql = db.prepare('SELECT user.id_user, user.name, user.telephone FROM user\n' +
-    'INNER JOIN user_has_friend ON user_has_friend.id_friend = user.id_user\n' +
-    'WHERE user_has_friend.id_user = ?;\n')
+var GetChatList = function (userPhone) {
+    var prepSql = db.prepare('SELECT telephone, name FROM\n' +
+    '(SELECT user.id_user AS userId, id_friend AS friendId FROM user\n' +
+    'INNER JOIN user_has_friend ON user.id_user = user_has_friend.id_user\n' +
+    'WHERE user.telephone = ?)\n' +
+    'INNER JOIN user ON user.id_user = friendId;\n')
     return new Promise((resolve) => {
         db.serialize(() => {
-            prepSql.all(userId, (err, result) => {
+            prepSql.all(userPhone, (err, result) => {
                 resolve(result)
             })
         })
     })
 }
 
-var CheckHasChat = function(userId, friendId) {
+var CheckHasChat = function(userPhone, friendPhone) {
     return new Promise(resolve => {
         db.serialize(() => {
-            var prep = db.prepare('SELECT * FROM user_has_friend WHERE (id_user = ?) AND (id_friend = ?);')
-            prep.get(userId, friendId, (err, result) => {
+            var prep = db.prepare('SELECT userId, friendId FROM\n' +
+            '(SELECT user.id_user AS userId, id_friend AS friendId FROM user\n' + 
+            'INNER JOIN user_has_friend ON user.id_user = user_has_friend.id_user\n' +
+            'WHERE user.telephone = ?)\n' +
+            'INNER JOIN user ON user.id_user = friendId\n' +
+            'WHERE telephone = ?')
+            prep.get(userPhone, friendPhone, (err, result) => {
                 if (err) throw err;
                 if (result) { 
                     resolve(true)
@@ -87,6 +98,7 @@ module.exports = {GetUserInfoByNumber,
                  InsertNewUser,
                  GetUsersInfoByNumber,
                  CheckHasChat,
-                 GetUserIdByNumber,
+                 GetUsersIdByNumber,
                  InsertNewChat,
-                 GetChatList};
+                 GetChatList
+                };
