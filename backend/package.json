@@ -2,11 +2,10 @@
   "name": "messangerproject",
   "version": "1.0.0",
   "description": "Мессенджер похожий на телеграм \r ## Функционал\r   1)Регистрация",
-  "main": "database.js",
+  "main": "server.js",
   "dependencies": {
     "body-parser": "^1.19.0",
     "connect": "^3.7.0",
-    "connect-redis": "^5.0.0",
     "connect-sqlite3": "^0.9.11",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -14,15 +13,16 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "morgan": "^1.10.0",
-    "mysql": "^2.18.1",
     "redis": "^3.0.2",
     "socket.io": "^2.3.0",
-    "sqlite3": "^5.0.0",
-    "uuid": "^8.2.0"
+    "sqlite3": "^5.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.0.1",
+    "nock": "^13.0.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "repository": {
@@ -35,4 +35,9 @@
     "url": "https://github.com/al-ry/global-messenger/issues"
   },
   "homepage": "https://github.com/al-ry/global-messenger#readme"
+
 }
+
+
+
+

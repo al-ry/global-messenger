@@ -1,22 +1,22 @@
 var User = require('../models/user.js')
-
+var cookieUtil = require('../utils/cookieUtil')
 
 exports.Login = (req, res) => {
     var userData = req.body
-
-    User.Find(userData.telephone, function(result) {
+    User.FindOne(userData.telephone).then(result => {
         if (result)
         {
             if(User.CheckPassword(userData.password, result.crypted_password, result.salt_password) == true)
             {
                 req.session.user = result
-                console.log(req.session.user)
-                res.send('You are logged in')
+                var newCookie = cookieUtil.SignCookie(req.sessionID)
+                req.cookies['connect.sid'] = newCookie
+                res.status(200).json(req.cookies)
             } else {
-                res.send('password is incorrect')
+                res.status(400).send('password is incorrect')
             }
         } else {
-            res.send('login is incorrect')
+            res.status(400).send('login is incorrect')
         }
     })
 }
