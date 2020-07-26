@@ -39,7 +39,6 @@ module.exports = class User {
     static AddChat(userId, friendId) {
         console.log(userId, friendId)
         return new Promise((resolve) => {
-<<<<<<< Updated upstream
             dbHelper.CheckHasChat(userId, friendId).then((hasChat) => {
                 if (hasChat) {
                     resolve(false)
@@ -47,19 +46,6 @@ module.exports = class User {
                     dbHelper.InsertNewChat(userId, friendId) 
                     resolve(true)
                 }
-=======
-            db.serialize(() => {
-                var prep = db.prepare('SELECT * FROM user_has_friend WHERE (id_user = ?) AND (id_friend = ?);')
-                prep.get(userId, friendId, (err, result) => {
-                    if (result) {
-                        resolve(false)
-                    } else {
-                        var prep = db.prepare('INSERT INTO user_has_friend(id_user, id_friend) VALUES (?, ?);')
-                        prep.run(userId, friendId)
-                        resolve(true)                     
-                    }
-                })
->>>>>>> Stashed changes
             })
         })
     }

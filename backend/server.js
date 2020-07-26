@@ -38,14 +38,8 @@ app.use(homeRouter)
 app.use(logoutRouter)
 app.use(addChatRouter)
 app.use(deleteChatRouter)
-<<<<<<< Updated upstream
 app.use(userChatsRouter)
-=======
-app.get('/', (req,res) => {
-    console.log('hi')
-    res.send('hi')
-})
->>>>>>> Stashed changes
+
 
 server = app.listen(3000, () => {
     console.log('Server started on port 3000...')
