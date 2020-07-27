@@ -1,2 +1,3 @@
+include ':PhoneNumberInputLib'
 include ':app'
 rootProject.name='KotlinMessenger'

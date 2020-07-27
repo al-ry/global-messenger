@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.kotlinmessenger.storage.CookieStorage
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.storage.CookieStorage
 import com.example.kotlinmessenger.storage.StorageManager
-import com.example.kotlinmessenger.storage.User
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,14 +17,15 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SignInActivity: AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
         val signInButton: Button = findViewById(R.id.sign_in_button)
-
         signInButton.setOnClickListener {
-            val userInfo = listOf<String>(sign_in_phone_field.text.toString(),
+            val userInfo = listOf<String>(sign_in_phone_number_field.text.toString(),
                 sign_in_password_field.text.toString())
 
             if (checkUserInfo(userInfo))
@@ -39,7 +39,7 @@ class SignInActivity: AppCompatActivity() {
         }
     }
 
-    private fun createRetrofitClient(): INodeJS {
+    private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
             .baseUrl("http://10.0.2.2:3000/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -50,7 +50,7 @@ class SignInActivity: AppCompatActivity() {
     }
 
     private fun signInUser(infoList: List<String>) {
-        val myApi = createRetrofitClient()
+        val myApi = createRetrofitClientToParseJSON()
         val storageManager = StorageManager(applicationContext);
 
         val call = myApi.logInUser(
@@ -70,7 +70,7 @@ class SignInActivity: AppCompatActivity() {
                     ).show()
                 else {
                     storageManager.putData("cookies", response.body()!!.cookie.toString());
-                    storageManager.putData("currentUserPhone", sign_in_phone_field.text.toString());
+                    storageManager.putData("currentUserPhone", infoList.first());
                     startActivity(Intent(this@SignInActivity, LastMessagesActivity::class.java))
                 }
             }

@@ -1,7 +1,6 @@
 package com.example.kotlinmessenger
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -24,7 +23,6 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
-
 class LastMessagesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,17 +32,24 @@ class LastMessagesActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        formChatPage()
+    }
 
-        val storageManager = StorageManager(applicationContext);
-
+    private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
             .baseUrl("http://10.0.2.2:3000/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val myApi = retrofit.create(INodeJS::class.java)
+        return retrofit.create(INodeJS::class.java)
+    }
+
+    fun formChatPage()
+    {
+        val storageManager = StorageManager(applicationContext);
         val userPhone = storageManager.getData("currentUserPhone")
+        val myApi = createRetrofitClientToParseJSON()
 
         var call = myApi.getChats(userPhone.toString())
 
@@ -54,7 +59,7 @@ class LastMessagesActivity : AppCompatActivity() {
                 if  (response.code() == 200) {
                     val body = response.body()
                     if (body != null) {
-                        renderSearchResult(body)
+                        showChatPage(body)
                     }
                 }
             }
@@ -66,7 +71,10 @@ class LastMessagesActivity : AppCompatActivity() {
         })
     }
 
-    fun renderSearchResult(userList: List<User>) {
+    fun showChatPage(userList: List<User>) {
+        val storageManager = StorageManager(applicationContext);
+        val userPhone = storageManager.getData("currentUserPhone")
+
         val adapter = GroupAdapter<GroupieViewHolder>()
         recycle_view_messages.adapter = adapter
 
@@ -76,38 +84,41 @@ class LastMessagesActivity : AppCompatActivity() {
 
         adapter.setOnItemLongClickListener { item, view ->
             val userItem = item as MessageHolder
-
-            AlertDialog.Builder(this@LastMessagesActivity)
-                .setTitle("Attention")
-                .setMessage("Message history will be deleted. Are you sure?")
-                .setCancelable(false)
-                .setPositiveButton("Yes") {
-                        dialog, which -> adapter.remove(userItem)
-                }
-                .setNegativeButton("Back") {
-                        dialog, which ->
-                }
-                .show()
+            createPopUpMenu(userPhone, item.user.telephone, adapter, userItem)
             true
         }
 
         adapter.setOnItemClickListener{ item, view ->
             val userItem = item as MessageHolder
-            adapter.remove(userItem)
             val intent = Intent(view.context, ChatLogActivity::class.java)
             intent.putExtra("user", userItem.user)
             startActivity(intent)
         }
-
-
     }
 
+    private fun createPopUpMenu(
+        userPhone: String?,
+        telephone: String,
+        adapter: GroupAdapter<GroupieViewHolder>,
+        userItem: MessageHolder) {
+        AlertDialog.Builder(this@LastMessagesActivity)
+            .setTitle("Attention")
+            .setMessage("Message history will be deleted. Are you sure?")
+            .setCancelable(false)
+            .setPositiveButton("Yes") {
+                    dialog, which -> adapter.remove(userItem)
+                deleteChat(userPhone.toString(), telephone)
+            }
+            .setNegativeButton("Back") {
+                    dialog, which ->
+            }
+            .show()
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.menu_new_message -> {
-                startActivity(
-                    Intent(this@LastMessagesActivity,
+                startActivity(Intent(this@LastMessagesActivity,
                         FindUserActivity::class.java))
             }
             R.id.menu_sign_out -> {
@@ -116,14 +127,33 @@ class LastMessagesActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
     override fun onCreateOptionsMenu(menu: Menu?) : Boolean
     {
         menuInflater.inflate(R.menu.nav_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
-    fun deleteChat() {
+    fun deleteChat(userPhone : String, friendPhone: String) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:3000/")
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
 
+        val myApi = retrofit.create(INodeJS::class.java)
+        val call = myApi.deleteChat(userPhone, friendPhone)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(all: Call<Void>, response: Response<Void>)
+            {
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Toast.makeText(this@LastMessagesActivity, "There was an error with authorization",
+                    Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     fun SignOut()
@@ -135,10 +165,8 @@ class LastMessagesActivity : AppCompatActivity() {
             .build()
 
         val myApi = retrofit.create(INodeJS::class.java)
-        val storageManager =
-            StorageManager(
-                applicationContext
-            )
+        val storageManager = StorageManager(applicationContext)
+
         val cookies =  "connect.sid=" + storageManager.getData("cookies")
 
         var call = myApi.logOut(cookies)
@@ -151,14 +179,10 @@ class LastMessagesActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 storageManager.deleteData("cookies")
                 storageManager.deleteData("phone")
-                Toast.makeText(this@LastMessagesActivity, "You have just signed out",
-                    Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this@LastMessagesActivity,
                     SignInActivity::class.java))
             }
         })
-
-
     }
 }
 

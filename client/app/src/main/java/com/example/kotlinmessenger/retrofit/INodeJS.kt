@@ -8,9 +8,11 @@ import retrofit2.Call
 interface INodeJS {
     @POST("register")
     @FormUrlEncoded
-    fun registerUser(@Field("name") username: String,
-                     @Field("telephone") phone: String,
-                     @Field("password") password: String): Call<CookieStorage>
+    fun registerUser(
+        @Field("name") username: String,
+        @Field("telephone") phone: String,
+        @Field("password") password: String
+    ) : Call<CookieStorage>
 
     @POST("login")
     @FormUrlEncoded
@@ -35,4 +37,9 @@ interface INodeJS {
         @Query("friendPhone") friendPhone: String
     ) : Call<Void>
 
+    @GET("deleteChat")
+    fun deleteChat(
+        @Query("userPhone") userPhone: String,
+        @Query("friendPhone") friendPhone: String
+    ) : Call<Void>
  }

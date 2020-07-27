@@ -16,7 +16,7 @@
         android:background="@drawable/rounded_edittext"
         android:padding="16dp"
         android:maxWidth="240dp"
-        android:text="Users messa222222222222222222222222222222222222222222222123123123123123123123ge"
+        android:text="Users"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent" />
 

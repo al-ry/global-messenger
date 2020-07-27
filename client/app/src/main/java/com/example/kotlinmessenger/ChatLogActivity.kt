@@ -26,6 +26,7 @@ class ChatLogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
+
         val storageManager = StorageManager(applicationContext);
         val user = intent.getParcelableExtra<User>("user")
         supportActionBar?.title = user?.name + " | " + user?.telephone
@@ -33,7 +34,6 @@ class ChatLogActivity : AppCompatActivity() {
         val adapter = GroupAdapter<GroupieViewHolder>()
 
         recycler_view_chat_log.adapter = adapter
-
         val sendButton : Button = findViewById(R.id.send_button_chat_log)
 
         sendButton.setOnClickListener{

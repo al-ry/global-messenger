@@ -24,16 +24,22 @@ class LoadingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages)
-        storageManager = StorageManager(applicationContext)
+        checkUserSession()
+    }
 
+    private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
             .baseUrl("http://10.0.2.2:3000/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        myApi = retrofit.create(INodeJS::class.java)
+        return retrofit.create(INodeJS::class.java)
+    }
 
+    private fun checkUserSession() {
+        storageManager = StorageManager(applicationContext)
+        val myApi = createRetrofitClientToParseJSON()
         val cookies =  "connect.sid=" + storageManager.getData("cookies")
 
         var call = myApi.checkSession(cookies)
@@ -42,7 +48,6 @@ class LoadingActivity : AppCompatActivity() {
             override fun onResponse(all: Call<Void>, response: Response<Void>)
             {
                 if  (response.code() == 200) {
-                    val body = response.body()
                     val intent = Intent(this@LoadingActivity, LastMessagesActivity::class.java)
                     startActivity(intent)
                 }
