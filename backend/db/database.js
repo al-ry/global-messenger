@@ -3,7 +3,6 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('messenger.sqlite3');
 
 
-
 var InsertNewUser = (telephone, name, password, salt) => {
     db.serialize(() => {     
         var prep = db.prepare('INSERT INTO user(telephone, name, crypted_password, salt_password)'
@@ -38,7 +37,6 @@ var GetUsersInfoByNumber = function(telephone) {
 var GetUsersIdByNumber = function(userPhone, friendPhone) {
     return new Promise(resolve => {
         db.serialize(() => {
-            var prep = db.prepare('')
             db.get('SELECT id_user FROM user WHERE telephone = ?;', userPhone, (err, user) => {
                 db.get('SELECT id_user FROM user WHERE telephone = ?;', friendPhone, (err, friend) => {
                     var usersIds = {userId: user.id_user, friendId: friend.id_user}
@@ -61,7 +59,7 @@ var GetChatList = function (userPhone) {
                 resolve(result)
             })
         })
-    })
+    })  
 }
 
 var CheckHasChat = function(userPhone, friendPhone) {
@@ -94,11 +92,21 @@ var InsertNewChat = (userId, friendId) => {
     })
 }
 
+var DeleteChat = (userId, friendId) => {
+    db.serialize(() => {
+        var prepSql = db.prepare('DELETE FROM user_has_friend WHERE (id_user = ?) AND (id_friend = ?);')
+        prepSql.run(userId, friendId, (err, res) => {
+            if (err) throw err;
+        })
+    })
+}
+
 module.exports = {GetUserInfoByNumber,
                  InsertNewUser,
                  GetUsersInfoByNumber,
                  CheckHasChat,
                  GetUsersIdByNumber,
                  InsertNewChat,
-                 GetChatList
+                 GetChatList,
+                 DeleteChat
                 };
