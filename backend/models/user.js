@@ -56,13 +56,12 @@ module.exports = class User {
             })
         })
     }
-    // static DeleteChat(userId, friendId) {
-    //     var prepSql = db.prepare('DELETE FROM user_has_friend WHERE (id_user = ?) AND (id_friend = ?);')
-    //     return new Promise((resolve) => {
-    //         db.serialize(() => {
-    //             prepSql.run(userId, friendId)
-    //             resolve();
-    //         })
-    //     })
-    // }
+    static DeleteChat(userPhone, friendPhone) {
+        return new Promise((resolve) => {
+            dbHelper.GetUsersIdByNumber(userPhone, friendPhone).then(result => {
+                dbHelper.DeleteChat(result.userId, result.friendId)
+                resolve(true)
+            })
+        })
+    }
 }
