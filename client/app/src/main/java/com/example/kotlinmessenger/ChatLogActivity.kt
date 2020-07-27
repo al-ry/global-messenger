@@ -41,14 +41,13 @@ class ChatLogActivity : AppCompatActivity() {
             if (messageText.isNotEmpty() && messageText.isNotBlank())
             {
                 adapter.add(ChatToItem(messageText))
-                val phoneNumber = storageManager.getData("phone")
+                val phoneNumber = storageManager.getData("currentUserPhone")
                 Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show()
                 recycler_view_chat_log.adapter = adapter
                 message_field_chat_log.text.clear()
                 addNewDialog(phoneNumber.toString(), user.telephone)
             }
         }
-
     }
 
     private fun addNewDialog(fromNumber: String, toNumber: String) {

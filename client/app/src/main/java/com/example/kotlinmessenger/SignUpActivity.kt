@@ -10,6 +10,7 @@ import com.example.kotlinmessenger.retrofit.RetrofitClient
 import com.example.kotlinmessenger.storage.StorageManager
 import com.example.kotlinmessenger.storage.User
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,9 +66,8 @@ class SignUpActivity : AppCompatActivity()
                 else
                 {
                     storageManager.putData("cookies", response.body()!!.cookie.toString());
-                    val intent = Intent(this@SignUpActivity, LastMessagesActivity::class.java)
-                    intent.putExtra("currentUser", User("123", userInfo[0], userInfo[1]))
-                    startActivity(intent)
+                    storageManager.putData("currentUserPhone", userInfo[1]);
+                    startActivity(Intent(this@SignUpActivity, LastMessagesActivity::class.java))
                 }
             }
 

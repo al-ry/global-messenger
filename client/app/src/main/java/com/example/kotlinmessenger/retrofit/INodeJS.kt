@@ -18,13 +18,16 @@ interface INodeJS {
                   @Field("password") password: String): Call<CookieStorage>
 
     @GET("home")
-    fun checkSession(@Header("Cookie") sessionIdAndToken: String? ): Call<User>
+    fun checkSession(@Header("Cookie") sessionIdAndToken: String? ): Call<Void>
 
     @GET("logout")
     fun logOut(@Header("Cookie") sessionIdAndToken: String) : Call<Void>
 
     @GET("search")
-    fun findUser (@Query("telephone") phone: String) : Call<List<User>>
+    fun findUser(@Query("telephone") phone: String) : Call<List<User>>
+
+    @GET("chats")
+    fun getChats(@Query("userPhone") phone: String) : Call<List<User>>
 
     @GET("addChat")
     fun addChat(

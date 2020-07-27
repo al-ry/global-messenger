@@ -70,7 +70,7 @@ class SignInActivity: AppCompatActivity() {
                     ).show()
                 else {
                     storageManager.putData("cookies", response.body()!!.cookie.toString());
-                    storageManager.putData("phone", sign_in_phone_field.text.toString());
+                    storageManager.putData("currentUserPhone", sign_in_phone_field.text.toString());
                     startActivity(Intent(this@SignInActivity, LastMessagesActivity::class.java))
                 }
             }
