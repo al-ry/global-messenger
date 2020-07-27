@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinmessenger.storage.CookieStorage
 import com.example.kotlinmessenger.retrofit.INodeJS
 import com.example.kotlinmessenger.storage.StorageManager
+import com.example.kotlinmessenger.storage.User
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback

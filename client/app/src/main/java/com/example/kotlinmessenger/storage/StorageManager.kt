@@ -8,6 +8,7 @@ class StorageManager(context: Context)  {
     private var sharedPreferences = context.getSharedPreferences("myPreferences", 0)
 
     fun putData(key : String, value : String) {
+        deleteData(key)
         sharedPreferences.edit().putString(key, value).apply()
     }
 
