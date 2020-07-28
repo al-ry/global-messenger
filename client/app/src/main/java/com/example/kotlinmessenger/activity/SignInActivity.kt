@@ -42,7 +42,7 @@ class SignInActivity: AppCompatActivity() {
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/")
+            .baseUrl("http://192.168.43.152:3000/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
