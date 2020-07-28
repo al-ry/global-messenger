@@ -1,18 +1,22 @@
-package com.example.kotlinmessenger
+package com.example.kotlinmessenger.activity
 
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.system.Os.socket
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
 import com.example.kotlinmessenger.storage.StorageManager
 import com.example.kotlinmessenger.storage.User
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
+import io.socket.client.IO
+import io.socket.client.Socket
 import kotlinx.android.synthetic.main.activity_last_messages.*
 import kotlinx.android.synthetic.main.found_chat_row.view.*
 import retrofit2.Call
@@ -22,9 +26,12 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.lang.Exception
+
 
 class LastMessagesActivity : AppCompatActivity() {
 
+    lateinit var socket: Socket
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_last_messages)
@@ -33,6 +40,23 @@ class LastMessagesActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         formChatPage()
+        startConnection()
+    }
+
+
+    private fun startConnection() {
+        try {
+            socket = IO.socket("http://10.0.2.2:3000/")
+            socket.on(Socket.EVENT_CONNECT) {
+                runOnUiThread {
+                    Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show()
+                }
+                socket.connect()
+
+            }
+        } catch (ex:Exception){
+            Toast.makeText(this, "Problem", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
@@ -100,7 +124,8 @@ class LastMessagesActivity : AppCompatActivity() {
         userPhone: String?,
         telephone: String,
         adapter: GroupAdapter<GroupieViewHolder>,
-        userItem: MessageHolder) {
+        userItem: MessageHolder
+    ) {
         AlertDialog.Builder(this@LastMessagesActivity)
             .setTitle("Attention")
             .setMessage("Message history will be deleted. Are you sure?")

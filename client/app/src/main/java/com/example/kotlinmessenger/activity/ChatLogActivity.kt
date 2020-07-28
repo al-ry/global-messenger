@@ -1,10 +1,10 @@
-package com.example.kotlinmessenger
+package com.example.kotlinmessenger.activity
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
 import com.example.kotlinmessenger.storage.StorageManager
 import com.example.kotlinmessenger.storage.User
@@ -18,7 +18,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 
@@ -40,7 +39,11 @@ class ChatLogActivity : AppCompatActivity() {
             val messageText = message_field_chat_log.text.toString()
             if (messageText.isNotEmpty() && messageText.isNotBlank())
             {
-                adapter.add(ChatToItem(messageText))
+                adapter.add(
+                    ChatToItem(
+                        messageText
+                    )
+                )
                 val phoneNumber = storageManager.getData("currentUserPhone")
                 Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show()
                 recycler_view_chat_log.adapter = adapter
