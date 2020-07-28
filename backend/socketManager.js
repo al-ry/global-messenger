@@ -6,10 +6,9 @@ module.exports = function(socket) {
     console.log('User connected:' + socket.id)
 
     socket.on('user_connected', (userPhone) => {
-        connectedUsers[userPhone] = socket.id
-        console.log(connectedUsers)
         if (isUser(connectedUsers, userPhone) != true) {
-
+            connectedUsers[userPhone] = socket.id
+            console.log(connectedUsers)
         }
     })
 
@@ -18,7 +17,7 @@ module.exports = function(socket) {
         var receiverSocketId = connectedUsers[data.receiver]
         io.to(receiverSocketId).emit("new_message", data.msg)
     })
-    socket.on('disconnect', (socket) => {
+    socket.on('disconnect', () => {
         console.log('User disconnected ' + socket.id)
     })
 }
