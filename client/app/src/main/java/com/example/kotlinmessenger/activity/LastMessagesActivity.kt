@@ -38,7 +38,7 @@ class LastMessagesActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         formChatPage()
-        //startConnection()
+        startConnection()
     }
 
     override fun onBackPressed() {
@@ -53,7 +53,6 @@ class LastMessagesActivity : AppCompatActivity() {
                     Toast.makeText(this, "No Problem", Toast.LENGTH_SHORT).show()
                 }
             }
-
             socket.connect()
         } catch (ex:Exception){
             Toast.makeText(this, "Problem", Toast.LENGTH_SHORT).show()
