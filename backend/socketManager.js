@@ -6,10 +6,8 @@ module.exports = function(socket) {
     console.log('User connected:' + socket.id)
 
     socket.on('user_connected', (userPhone) => {
-        if (isUser(connectedUsers, userPhone) != true) {
-            connectedUsers[userPhone] = socket.id
-            console.log(connectedUsers)
-        }
+        connectedUsers[userPhone] = socket.id
+        console.log(connectedUsers)
     })
 
     socket.on('send_message', (data) => {
@@ -19,7 +17,7 @@ module.exports = function(socket) {
     })
     socket.on('disconnect', (userPhone) => {
         connectedUsers.slice(userPhone, 1)
-        console.log(connectedUsers[userPhone])
+        console.log(connectedUsers)
         console.log('User disconnected ' + socket.id)
     })
 }
