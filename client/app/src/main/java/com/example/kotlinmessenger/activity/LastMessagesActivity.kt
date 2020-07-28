@@ -45,10 +45,14 @@ class LastMessagesActivity : AppCompatActivity() {
 
     private fun startConnection() {
         try {
-            socket = IO.socket("http://10.0.2.2:3000/")
+            socket = IO.socket("http://192.168.43.152:3000/")
             socket.on(Socket.EVENT_CONNECT) {
-                socket.connect()
+                runOnUiThread() {
+                    Toast.makeText(this, "No Problem", Toast.LENGTH_SHORT).show()
+                }
             }
+
+            socket.connect()
         } catch (ex:Exception){
             Toast.makeText(this, "Problem", Toast.LENGTH_SHORT).show()
         }
@@ -56,7 +60,7 @@ class LastMessagesActivity : AppCompatActivity() {
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/")
+            .baseUrl("http://192.168.43.152:3000/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -156,7 +160,7 @@ class LastMessagesActivity : AppCompatActivity() {
 
     fun deleteChat(userPhone : String, friendPhone: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/")
+            .baseUrl("http://192.168.43.152:3000/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
@@ -179,7 +183,7 @@ class LastMessagesActivity : AppCompatActivity() {
     fun SignOut()
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/")
+            .baseUrl("http://192.168.43.152:3000/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
