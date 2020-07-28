@@ -17,6 +17,7 @@
     "redis": "^3.0.2",
     "socket-io": "^1.0.0",
     "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
