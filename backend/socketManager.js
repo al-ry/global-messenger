@@ -17,7 +17,9 @@ module.exports = function(socket) {
         var receiverSocketId = connectedUsers[data.receiver]
         io.to(receiverSocketId).emit("new_message", data.msg)
     })
-    socket.on('disconnect', () => {
+    socket.on('disconnect', (userPhone) => {
+        connectedUsers.slice(userPhone, 1)
+        console.log(connectedUsers[userPhone])
         console.log('User disconnected ' + socket.id)
     })
 }
