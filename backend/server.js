@@ -16,6 +16,8 @@ var userChatsRouter = require('./routes/userChatsRouter')
 var deleteChatRouter = require('./routes/deleteChatRouter')
 const socketManager = require('./socketManager')
 var app = express()
+
+
 var server = require('http').Server(app)
 
 
@@ -42,10 +44,20 @@ app.use(deleteChatRouter)
 app.use(userChatsRouter)
 
 
-server = app.listen(3000, () => {
+server.listen(3000, () => {
     console.log('Server started on port 3000...')
 })
+
+
+app.get('/', (req, res) => {
+    res.sendFile('index.html', {root: __dirname})
+
+})
 const io = require("socket.io")(server)
-io.on('connection', (socket) => { 
+
+io.on('connection', function(socket) { 
     console.log('User connected:' + socket.id);
 })
+
+
+
