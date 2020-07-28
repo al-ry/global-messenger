@@ -46,8 +46,10 @@ class LastMessagesActivity : AppCompatActivity() {
 
     }
     private fun startConnection() {
+        val storageManager = StorageManager(applicationContext);
         try {
             socket = IO.socket("http://192.168.43.152:3000/")
+            socket.emit("user_connected", storageManager.getData("phone"))
             socket.on(Socket.EVENT_CONNECT) {
                 runOnUiThread() {
                     Toast.makeText(this, "No Problem", Toast.LENGTH_SHORT).show()
@@ -202,15 +204,14 @@ class LastMessagesActivity : AppCompatActivity() {
                     "Problems with logging out", Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                socket.emit("disconnect", storageManager.getData("phone"))
+                socket.disconnect()
                 storageManager.deleteData("cookies")
                 storageManager.deleteData("phone")
                 startActivity(Intent(this@LastMessagesActivity,
                     SignInActivity::class.java))
-                socket.on(Socket.EVENT_DISCONNECT) {
-                    //
-                }
-                socket.disconnect()
-            }
+
+        }
         })
     }
 }
@@ -224,5 +225,4 @@ class  MessageHolder(val user: User) : Item<GroupieViewHolder>()
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.char_username.text = user.name
     }
-
 }
