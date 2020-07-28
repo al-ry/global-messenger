@@ -55,9 +55,7 @@ app.get('/', (req, res) => {
 })
 const io = require("socket.io")(server)
 
-io.on('connection', function(socket) { 
-    console.log('User connected:' + socket.id);
-})
+io.on('connection', socketManager)
 
 
 
