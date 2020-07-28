@@ -84,6 +84,7 @@ class FindUserActivity : AppCompatActivity() {
 
         adapter.setOnItemClickListener{ item, view ->
             val userItem = item as UserHolder
+            adapter.remove(userItem)
             val intent = Intent(view.context, ChatLogActivity::class.java)
             intent.putExtra("user", userItem.user)
             startActivity(intent)

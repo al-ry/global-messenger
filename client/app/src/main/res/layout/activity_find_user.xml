@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".FindUserActivity">
 
-
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/user_phone_for_search"
         android:layout_width="match_parent"

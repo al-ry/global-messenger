@@ -10,6 +10,7 @@ import com.example.kotlinmessenger.retrofit.RetrofitClient
 import com.example.kotlinmessenger.storage.StorageManager
 import com.example.kotlinmessenger.storage.User
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,13 +28,9 @@ class SignUpActivity : AppCompatActivity()
         setContentView(R.layout.activity_main)
 
         val signUpButton: Button = findViewById(R.id.sign_up_button)
-        val retrofit = RetrofitClient.instance
-
-        myApi = retrofit.create(INodeJS::class.java)
-
         signUpButton.setOnClickListener{
             val info = checkUserInfo(sign_up_username_field.text.toString(),
-            sign_up_phone_field.text.toString(), sign_up_password_field.text.toString(),
+            sign_up_phone_number_field.text.toString(), sign_up_password_field.text.toString(),
                 sign_up_password_repeat_field.text.toString())
 
             if (info.isNotEmpty())
@@ -41,6 +38,15 @@ class SignUpActivity : AppCompatActivity()
                 registrate(info)
             }
         }
+    }
+    private fun createRetrofitClientToParseJSON(): INodeJS {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:3000/")
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        return retrofit.create(INodeJS::class.java)
     }
 
     private fun registrate(userInfo : List<String>)
@@ -51,8 +57,8 @@ class SignUpActivity : AppCompatActivity()
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+        val myApi = createRetrofitClientToParseJSON()
         storageManager = StorageManager(applicationContext)
-        myApi = retrofit.create(INodeJS::class.java)
 
         var call = myApi.registerUser(userInfo[0], userInfo[1], userInfo[2])
 
@@ -65,9 +71,8 @@ class SignUpActivity : AppCompatActivity()
                 else
                 {
                     storageManager.putData("cookies", response.body()!!.cookie.toString());
-                    val intent = Intent(this@SignUpActivity, LastMessagesActivity::class.java)
-                    intent.putExtra("currentUser", User("123", userInfo[0], userInfo[1]))
-                    startActivity(intent)
+                    storageManager.putData("currentUserPhone", userInfo[1]);
+                    startActivity(Intent(this@SignUpActivity, LastMessagesActivity::class.java))
                 }
             }
 
