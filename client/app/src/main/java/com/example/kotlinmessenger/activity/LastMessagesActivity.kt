@@ -29,7 +29,6 @@ import java.lang.Exception
 
 
 class LastMessagesActivity : AppCompatActivity() {
-
     lateinit var socket: Socket
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +38,13 @@ class LastMessagesActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         formChatPage()
-        startConnection()
+        //startConnection()
     }
 
+    override fun onBackPressed() {
+        finish();
 
+    }
     private fun startConnection() {
         try {
             socket = IO.socket("http://192.168.43.152:3000/")
@@ -146,7 +148,7 @@ class LastMessagesActivity : AppCompatActivity() {
                         FindUserActivity::class.java))
             }
             R.id.menu_sign_out -> {
-                SignOut()
+                signOut()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -180,7 +182,7 @@ class LastMessagesActivity : AppCompatActivity() {
         })
     }
 
-    fun SignOut()
+    fun signOut()
     {
         val retrofit = Retrofit.Builder()
             .baseUrl("http://192.168.43.152:3000/")
@@ -205,6 +207,10 @@ class LastMessagesActivity : AppCompatActivity() {
                 storageManager.deleteData("phone")
                 startActivity(Intent(this@LastMessagesActivity,
                     SignInActivity::class.java))
+                socket.on(Socket.EVENT_DISCONNECT) {
+                    //
+                }
+                socket.disconnect()
             }
         })
     }
