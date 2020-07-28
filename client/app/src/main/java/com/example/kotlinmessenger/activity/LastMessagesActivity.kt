@@ -48,11 +48,7 @@ class LastMessagesActivity : AppCompatActivity() {
         try {
             socket = IO.socket("http://10.0.2.2:3000/")
             socket.on(Socket.EVENT_CONNECT) {
-                runOnUiThread {
-                    Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show()
-                }
                 socket.connect()
-
             }
         } catch (ex:Exception){
             Toast.makeText(this, "Problem", Toast.LENGTH_SHORT).show()
