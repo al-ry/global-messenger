@@ -4,6 +4,7 @@ var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
 var SQLiteStore = require('connect-sqlite3')(session)
 var cors = require('cors')
+
 var globals = require('./config/globals')
 var registerRouter = require('./routes/registerRouter')
 var loginRouter = require('./routes/loginRouter')
@@ -13,7 +14,7 @@ var logoutRouter = require('./routes/logoutRouter')
 var addChatRouter = require('./routes/addChatRouter')
 var userChatsRouter = require('./routes/userChatsRouter')
 var deleteChatRouter = require('./routes/deleteChatRouter')
-
+const socketManager = require('./socketManager')
 var app = express()
 var server = require('http').Server(app)
 
@@ -44,10 +45,5 @@ app.use(userChatsRouter)
 server = app.listen(3000, () => {
     console.log('Server started on port 3000...')
 })
-
 const io = require("socket.io")(server)
-
-io.on('connection', (socket) => {
-    console.log('User connected')
-    console.log('User connected', socket.id)
-})
+io.on('connection', socketManager)

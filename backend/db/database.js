@@ -47,7 +47,7 @@ var GetUsersIdByNumber = function(userPhone, friendPhone) {
     })
 }
 
-var GetChatList = function (userPhone) {
+var GetChatList = function(userPhone) {
     var prepSql = db.prepare('SELECT telephone, name FROM\n' +
     '(SELECT user.id_user AS userId, id_friend AS friendId FROM user\n' +
     'INNER JOIN user_has_friend ON user.id_user = user_has_friend.id_user\n' +
