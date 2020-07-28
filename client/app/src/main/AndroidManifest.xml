@@ -17,29 +17,29 @@
         tools:targetApi="m"
         tools:replace="android:label">
 
-        <activity android:name=".ChatLogActivity"
-            android:parentActivityName=".LastMessagesActivity"
+        <activity android:name=".activity.ChatLogActivity"
+            android:parentActivityName=".activity.LastMessagesActivity"
             android:label="username">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.kotlinmessenger.LastMessagesActivity" />
+                android:value="com.example.kotlinmessenger.activity.LastMessagesActivity" />
         </activity>
 
         <activity
-            android:name=".FindUserActivity"
+            android:name=".activity.FindUserActivity"
             android:label="Find user"
-            android:parentActivityName=".LastMessagesActivity">
+            android:parentActivityName=".activity.LastMessagesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.kotlinmessenger.LastMessagesActivity" />
+                android:value="com.example.kotlinmessenger.activity.LastMessagesActivity" />
         </activity>
 
         <activity
-            android:name=".LastMessagesActivity"
+            android:name=".activity.LastMessagesActivity"
             android:label="Last messages" />
-        <activity android:name=".SignInActivity"/>
+        <activity android:name=".activity.SignInActivity"/>
 
-        <activity android:name=".LoadingActivity">
+        <activity android:name=".activity.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,11 +48,11 @@
         </activity>
 
         <activity
-            android:name=".SignUpActivity"
-            android:parentActivityName=".SignInActivity">
+            android:name=".activity.SignUpActivity"
+            android:parentActivityName=".activity.SignInActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.kotlinmessenger.SignInActivity" />
+                android:value="com.example.kotlinmessenger.activity.SignInActivity" />
         </activity>
 
     </application>

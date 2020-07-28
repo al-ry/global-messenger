@@ -1,10 +1,11 @@
-package com.example.kotlinmessenger
+package com.example.kotlinmessenger.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
 import com.example.kotlinmessenger.storage.CookieStorage
 import com.example.kotlinmessenger.storage.StorageManager
