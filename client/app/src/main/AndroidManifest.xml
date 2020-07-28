@@ -38,7 +38,8 @@
             android:label="Last messages" />
         <activity android:name=".activity.SignInActivity"/>
 
-        <activity android:name=".activity.LoadingActivity">
+        <activity android:name=".activity.LoadingActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

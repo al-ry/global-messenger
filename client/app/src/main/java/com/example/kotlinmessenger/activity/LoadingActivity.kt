@@ -3,6 +3,8 @@ package com.example.kotlinmessenger.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
