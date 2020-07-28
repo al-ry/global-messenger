@@ -6,9 +6,10 @@ module.exports = function(socket) {
     console.log('User connected:' + socket.id)
 
     socket.on('user_connected', (userPhone) => {
+        connectedUsers[userPhone] = socket.id
+        console.log(connectedUsers)
         if (isUser(connectedUsers, userPhone) != true) {
-            connectedUsers[userPhone] = socket.id
-            console.log(connectedUsers)
+
         }
     })
 
