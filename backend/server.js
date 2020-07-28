@@ -46,4 +46,6 @@ server = app.listen(3000, () => {
     console.log('Server started on port 3000...')
 })
 const io = require("socket.io")(server)
-io.on('connection', socketManager)
+io.on('connection', (socket) => { 
+    console.log('User connected:' + socket.id);
+})
