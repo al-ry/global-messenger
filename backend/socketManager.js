@@ -7,9 +7,14 @@ module.exports = function(socket) {
     console.log('User connected:' + socket.id)
 
     socket.on('user_connected', (userPhone) => {
+        if (connectedUsers[userPhone] != undefined)
+        {
+            io.emit('log_out')
+        }
         connectedUsers[userPhone] = socket.id
         console.log(connectedUsers)
     })
+
 
     socket.on('send_message', (data) => {
         if(connectedUsers[data.receiver] != undefined)
@@ -23,6 +28,7 @@ module.exports = function(socket) {
     })
     socket.on('disconnect', (userPhone) => {
         connectedUsers.slice(userPhone, 1)
+        connectedUsers.find()
         console.log(connectedUsers)
         console.log('User disconnected ' + socket.id)
     })
