@@ -1,4 +1,5 @@
 const io = require('./server').io
+var config = require('./config/config')
 
 var Message = require('./models/message')
 var connectedUsers = [];
@@ -9,7 +10,12 @@ module.exports = function(socket) {
     // connectedUsers.push(socket.id)
     // console.log(connectedUsers)
 
-    socket.on('user_connected', (userPhone) => {
+    socket.on('user_connected', (userPhone, cookie) => {
+        console.log(userPhone, cookie)
+        if (connectedUsers[userPhone] != undefined)
+        {
+            config.sessionDB.destroy(cookie)
+        }
         connectedUsers[userPhone.toString()] = socket.id
         console.log(connectedUsers)
     })
@@ -25,8 +31,8 @@ module.exports = function(socket) {
         //newMessage.Save()
         //add to db
     })
-    socket.on('disconnect', (userPhone) => {
-        connectedUsers.slice(userPhone, 1)
+    socket.on('disconnection', (userPhone) => {
+        delete connectedUsers[userPhone]       
         console.log(connectedUsers)
         console.log('User disconnected ' + socket.id)
     })
