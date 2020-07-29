@@ -28,7 +28,6 @@ module.exports = function(socket) {
     })
     socket.on('disconnect', (userPhone) => {
         connectedUsers.slice(userPhone, 1)
-        connectedUsers.find()
         console.log(connectedUsers)
         console.log('User disconnected ' + socket.id)
     })
