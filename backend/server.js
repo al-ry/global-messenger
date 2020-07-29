@@ -2,10 +2,10 @@ var express = require('express')
 var session = require('express-session')
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
-var SQLiteStore = require('connect-sqlite3')(session)
+
 var cors = require('cors')
 
-var globals = require('./config/globals')
+var config = require('./config/config')
 var registerRouter = require('./routes/registerRouter')
 var loginRouter = require('./routes/loginRouter')
 var searchRouter = require('./routes/searchRouter')
@@ -26,11 +26,13 @@ app.use(bodyParser.urlencoded({extended : true}))
 app.set('trust proxy', 1);
 app.use(cors({ credentials: true, origin: true }))
 app.use(cookieParser())
+
+
 app.use(session({
-    secret: globals.SESSION_SECRET,
+    secret: config.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    store: new SQLiteStore,
+    store: config.sessionDB,
     cookie: { maxAge: 7 * 24 * 60 * 60 * 1000, secure: true } // 1 week
 }))
 
@@ -43,18 +45,12 @@ app.use(addChatRouter)
 app.use(deleteChatRouter)
 app.use(userChatsRouter)
 
-
 server.listen(3000, () => {
     console.log('Server started on port 3000...')
 })
 
-var Message = require('./models/message')
 app.get('/', (req, res) => {
     res.sendFile('index.html', {root: __dirname})
-    console.log(req.session)
-    req.session.Store.all((error, session) => {
-        console.log(session)
-    })
 })
 const io = require("socket.io")(server)
 
