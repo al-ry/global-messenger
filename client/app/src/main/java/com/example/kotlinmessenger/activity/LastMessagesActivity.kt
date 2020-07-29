@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
 import com.example.kotlinmessenger.storage.Constants
@@ -217,6 +218,11 @@ class LastMessagesActivity : AppCompatActivity() {
                     "Problems with logging out", Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                //val socket : Socket
+                //socket = MyApplication.getSocket()
+                var phone = storageManager.getData(Constants.phoneStorageKey).toString()
+                MyApplication.m_socket.emit("disconnection" , phone)
+                MyApplication.m_socket.disconnect()
                 //socket.emit("disconnect", storageManager.getData(Constants.phoneStorageKey))
                 //socket.disconnect()
                 storageManager.deleteData(Constants.socketStateStorageKey)

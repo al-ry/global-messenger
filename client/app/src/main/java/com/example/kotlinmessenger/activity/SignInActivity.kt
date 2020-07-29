@@ -91,13 +91,9 @@ class SignInActivity: AppCompatActivity() {
     }
 
     private fun setConnetcion(phone: String) {
-        var socket : Socket
-        socket = IO.socket(Constants.url)
-        socket.connect()
-
-        socket.emit("user_connected", phone.toString())
-        
-        MyApplication.setSocket(socket)
+        MyApplication.m_socket = IO.socket(Constants.url)
+        MyApplication.m_socket.connect()
+        MyApplication.m_socket.emit("user_connected", phone)
     }
 
 
