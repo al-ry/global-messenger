@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.storage.User
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.UserHolder
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -46,7 +47,7 @@ class FindUserActivity : AppCompatActivity() {
 
     fun findUser(phone: String){
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.43.152:3000/")
+            .baseUrl(Constants.url)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

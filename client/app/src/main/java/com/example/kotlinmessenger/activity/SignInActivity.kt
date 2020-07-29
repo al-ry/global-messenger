@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.CookieStorage
 import com.example.kotlinmessenger.storage.StorageManager
 import kotlinx.android.synthetic.main.activity_sign_in.*
@@ -42,7 +43,7 @@ class SignInActivity: AppCompatActivity() {
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.43.152:3000/")
+            .baseUrl(Constants.url)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -70,8 +71,8 @@ class SignInActivity: AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                 else {
-                    storageManager.putData("cookies", response.body()!!.cookie.toString());
-                    storageManager.putData("currentUserPhone", infoList.first());
+                    storageManager.putData(Constants.cookieStorageKey, response.body()!!.cookie.toString());
+                    storageManager.putData(Constants.phoneStorageKey, infoList.first());
                     startActivity(Intent(this@SignInActivity, LastMessagesActivity::class.java))
                 }
             }
