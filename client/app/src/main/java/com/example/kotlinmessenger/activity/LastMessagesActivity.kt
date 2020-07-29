@@ -49,11 +49,18 @@ class LastMessagesActivity : AppCompatActivity() {
 
     private fun startConnection() {
         val storageManager = StorageManager(applicationContext);
+        val phone = storageManager.getData(Constants.phoneStorageKey)
+
         socket = IO.socket(Constants.url)
-        Toast.makeText(this, socket.connected().toString(), Toast.LENGTH_LONG).show()
         try {
-            socket.connect()
-            socket.emit("user_connected", storageManager.getData(Constants.phoneStorageKey))
+            socket.emit("user_connected", phone.toString())
+            socket.on("new_connection")
+            {
+                socket.connect()
+                socket.emit("new_connection", phone.toString())
+            }
+
+            Toast.makeText(this, phone.toString(), Toast.LENGTH_SHORT).show()
             storageManager.putData(Constants.socketStateStorageKey, "true")
         } catch (ex: Exception) {
             Toast.makeText(this, "Problem", Toast.LENGTH_SHORT).show()
