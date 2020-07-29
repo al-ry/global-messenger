@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
 import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.CookieStorage
 import com.example.kotlinmessenger.storage.StorageManager
+import io.socket.client.IO
+import io.socket.client.Socket
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -73,6 +76,7 @@ class SignInActivity: AppCompatActivity() {
                 else {
                     storageManager.putData(Constants.cookieStorageKey, response.body()!!.cookie.toString());
                     storageManager.putData(Constants.phoneStorageKey, infoList.first());
+                    setConnetcion(infoList.first())
                     startActivity(Intent(this@SignInActivity, LastMessagesActivity::class.java))
                 }
             }
@@ -84,6 +88,16 @@ class SignInActivity: AppCompatActivity() {
                 ).show()
             }
         })
+    }
+
+    private fun setConnetcion(phone: String) {
+        var socket : Socket
+        socket = IO.socket(Constants.url)
+        socket.connect()
+
+        socket.emit("user_connected", phone.toString())
+        
+        MyApplication.setSocket(socket)
     }
 
 

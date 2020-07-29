@@ -47,8 +47,10 @@ class LoadingActivity : AppCompatActivity() {
             override fun onResponse(all: Call<Void>, response: Response<Void>)
             {
                 if  (response.code() == 200) {
+
                     val intent = Intent(this@LoadingActivity, LastMessagesActivity::class.java)
                     startActivity(intent)
+
                 }
                 else
                     startActivity(Intent(this@LoadingActivity, SignInActivity::class.java))

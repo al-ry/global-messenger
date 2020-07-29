@@ -30,7 +30,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class LastMessagesActivity : AppCompatActivity() {
     private var isConnected : Boolean = false
-    private lateinit var socket: Socket
+    //private lateinit var socket: Socket
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,27 +48,29 @@ class LastMessagesActivity : AppCompatActivity() {
     }
 
     private fun startConnection() {
-        val storageManager = StorageManager(applicationContext);
-        val phone = storageManager.getData(Constants.phoneStorageKey)
-
-        socket = IO.socket(Constants.url)
-        try {
-            socket.emit("user_connected", phone.toString())
-            socket.on("new_connection")
-            {
-                socket.connect()
-                socket.emit("new_connection", phone.toString())
-            }
-
-            Toast.makeText(this, phone.toString(), Toast.LENGTH_SHORT).show()
-            storageManager.putData(Constants.socketStateStorageKey, "true")
-        } catch (ex: Exception) {
-            Toast.makeText(this, "Problem", Toast.LENGTH_SHORT).show()
-        }
-
-        socket.on("log_out"){
-            signOut()
-        }
+//        val storageManager = StorageManager(applicationContext);
+//        val phone = storageManager.getData(Constants.phoneStorageKey)
+//
+//        socket = IO.socket(Constants.url)
+//        try {
+//            socket.connect()
+//            //socket.emit("user_connected", phone.toString())
+////            socket.on("new_connection")
+////            {
+////                socket.connect()
+////                socket.emit("new_connection", phone.toString())
+////                Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+////            }
+//
+//            Toast.makeText(this, phone.toString(), Toast.LENGTH_SHORT).show()
+//            storageManager.putData(Constants.socketStateStorageKey, "true")
+//        } catch (ex: Exception) {
+//            Toast.makeText(this, "Problem", Toast.LENGTH_SHORT).show()
+//        }
+//
+//        socket.on("log_out"){
+//            signOut()
+//        }
     }
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
@@ -215,8 +217,8 @@ class LastMessagesActivity : AppCompatActivity() {
                     "Problems with logging out", Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                socket.emit("disconnect", storageManager.getData(Constants.phoneStorageKey))
-                socket.disconnect()
+                //socket.emit("disconnect", storageManager.getData(Constants.phoneStorageKey))
+                //socket.disconnect()
                 storageManager.deleteData(Constants.socketStateStorageKey)
                 storageManager.deleteData(Constants.cookieStorageKey)
                 startActivity(Intent(this@LastMessagesActivity,
