@@ -51,8 +51,10 @@ server.listen(3000, () => {
 var Message = require('./models/message')
 app.get('/', (req, res) => {
     res.sendFile('index.html', {root: __dirname})
-    newMessage = new Message('q', 'alex', 'hello', '25-01-1800')
-    newMessage.Save()
+    console.log(req.session)
+    req.session.Store.all((error, session) => {
+        console.log(session)
+    })
 })
 const io = require("socket.io")(server)
 
