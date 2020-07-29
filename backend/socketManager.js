@@ -13,11 +13,11 @@ module.exports = function(socket) {
 
     socket.on('user_connected', (userPhone, cookie) => {
         console.log(userPhone, cookie)
-        usersCookies[userPhone] = cookie
         if (usersCookies[userPhone] != undefined)
         {
             config.sessionDB.destroy(usersCookies[userPhone])
         }
+        usersCookies[userPhone] = cookie
         connectedUsers[userPhone.toString()] = socket.id
         console.log(connectedUsers)
     })
