@@ -7,10 +7,10 @@ module.exports = function(socket) {
     console.log('User connected:' + socket.id)
 
     socket.on('user_connected', (userPhone) => {
-        if (connectedUsers[userPhone] != undefined)
-        {
-            io.emit('log_out')
-        }
+        // if (connectedUsers[userPhone] != undefined)
+        // {
+        //     io.emit('log_out')
+        // }
         connectedUsers[userPhone] = socket.id
         console.log(connectedUsers)
     })
