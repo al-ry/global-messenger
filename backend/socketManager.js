@@ -6,12 +6,15 @@ var connectedUsers = [];
 module.exports = function(socket) {
     console.log('User connected:' + socket.id)
 
+    // connectedUsers.push(socket.id)
+    // console.log(connectedUsers)
+
     socket.on('user_connected', (userPhone) => {
         // if (connectedUsers[userPhone] != undefined)
         // {
         //     io.emit('log_out')
         // }
-        connectedUsers[userPhone] = socket.id
+        connectedUsers[userPhone.toString()] = socket.id
         console.log(connectedUsers)
     })
 
