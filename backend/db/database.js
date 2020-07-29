@@ -101,6 +101,17 @@ var DeleteChat = (userId, friendId) => {
     })
 }
 
+
+
+
+var InsertNewMessage = (from, to, msg, date) => {
+    db.serialize(() => {     
+        var prep = db.prepare('INSERT INTO message_history(id_sender, id_receiver, message, date)'
+        + 'VALUES (?, ?, ?, ?);')
+        prep.run(from, to, msg, date)
+    })
+}
+
 module.exports = {GetUserInfoByNumber,
                  InsertNewUser,
                  GetUsersInfoByNumber,
@@ -108,5 +119,6 @@ module.exports = {GetUserInfoByNumber,
                  GetUsersIdByNumber,
                  InsertNewChat,
                  GetChatList,
-                 DeleteChat
+                 DeleteChat,
+                 InsertNewMessage
                 };

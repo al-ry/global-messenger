@@ -1,5 +1,6 @@
 const io = require('./server').io
 
+var Message = require('./models/message')
 var connectedUsers = [];
 
 module.exports = function(socket) {
@@ -11,9 +12,14 @@ module.exports = function(socket) {
     })
 
     socket.on('send_message', (data) => {
-        //connectedUsers.find(data.receiver)
-        var receiverSocketId = connectedUsers[data.receiver]
-        io.to(receiverSocketId).emit("new_message", data.msg)
+        if(connectedUsers[data.receiver] != undefined)
+        {
+            //newMessage = new Message(data.sender, data.receiver, data.msg, data.date)
+            var receiverSocketId = connectedUsers[data.receiver]
+            io.to(receiverSocketId).emit("new_message", data.msg)
+        }
+        //newMessage.Save()
+        //add to db
     })
     socket.on('disconnect', (userPhone) => {
         connectedUsers.slice(userPhone, 1)
