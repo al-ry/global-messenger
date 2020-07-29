@@ -8,9 +8,6 @@ exports.Login = (req, res) => {
         {
             if(User.CheckPassword(userData.password, result.crypted_password, result.salt_password) == true)
             {
-                if (req.session.user) {
-                    req.session.destroy()
-                }
                 req.session.user = result
                 var newCookie = cookieUtil.SignCookie(req.sessionID)
                 req.cookies['connect.sid'] = newCookie
