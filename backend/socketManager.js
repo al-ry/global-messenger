@@ -3,6 +3,7 @@ var config = require('./config/config')
 
 var Message = require('./models/message')
 var connectedUsers = [];
+var usersCookies = [];
 
 module.exports = function(socket) {
     console.log('User connected:' + socket.id)
@@ -12,9 +13,10 @@ module.exports = function(socket) {
 
     socket.on('user_connected', (userPhone, cookie) => {
         console.log(userPhone, cookie)
-        if (connectedUsers[userPhone] != undefined)
+        usersCookies[userPhone] = cookie
+        if (usersCookies[userPhone] != undefined)
         {
-            config.sessionDB.destroy(cookie)
+            config.sessionDB.destroy(usersCookies[userPhone])
         }
         connectedUsers[userPhone.toString()] = socket.id
         console.log(connectedUsers)
