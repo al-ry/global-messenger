@@ -91,9 +91,11 @@ class SignInActivity: AppCompatActivity() {
     }
 
     private fun setConnetcion(phone: String) {
+        val storageManager = StorageManager(applicationContext)
         MyApplication.m_socket = IO.socket(Constants.url)
         MyApplication.m_socket.connect()
-        MyApplication.m_socket.emit("user_connected", phone)
+        MyApplication.m_socket.emit("user_connected", phone,
+            storageManager.getData(Constants.cookieStorageKey))
     }
 
 
