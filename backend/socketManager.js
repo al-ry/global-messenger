@@ -10,16 +10,10 @@ module.exports = function(socket) {
     // console.log(connectedUsers)
 
     socket.on('user_connected', (userPhone) => {
-        if (connectedUsers[userPhone] == undefined)
-        {
-            io.emit('new_connection')
-        }
-    })
-
-    socket.on('new_connection', (userPhone) => {
         connectedUsers[userPhone.toString()] = socket.id
         console.log(connectedUsers)
     })
+
 
     socket.on('send_message', (data) => {
         if(connectedUsers[data.receiver] != undefined)
