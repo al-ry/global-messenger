@@ -1,7 +1,6 @@
 package com.example.kotlinmessenger.storage
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.text.method.TextKeyListener.clear
 
 class StorageManager(context: Context)  {
@@ -12,7 +11,7 @@ class StorageManager(context: Context)  {
     }
 
     fun getData(key: String): String? {
-        return sharedPreferences.getString(key, null)
+        return sharedPreferences.getString(key, "false")
     }
 
     fun deleteData(key: String) {

@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.Toast
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.StorageManager
 import com.example.kotlinmessenger.storage.User
 import com.xwray.groupie.GroupAdapter
@@ -44,7 +45,7 @@ class ChatLogActivity : AppCompatActivity() {
                         messageText
                     )
                 )
-                val phoneNumber = storageManager.getData("currentUserPhone")
+                val phoneNumber = storageManager.getData(Constants.phoneStorageKey)
                 Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show()
                 recycler_view_chat_log.adapter = adapter
                 message_field_chat_log.text.clear()
@@ -69,7 +70,7 @@ class ChatLogActivity : AppCompatActivity() {
     }
     private fun createRetrofitClient(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.43.152:3000/")
+            .baseUrl(Constants.url)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()

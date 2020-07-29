@@ -3,11 +3,10 @@ package com.example.kotlinmessenger.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
 import android.widget.Toast
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.StorageManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,7 +28,7 @@ class LoadingActivity : AppCompatActivity() {
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.43.152:3000/")
+            .baseUrl(Constants.url)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -40,7 +39,7 @@ class LoadingActivity : AppCompatActivity() {
     private fun checkUserSession() {
         storageManager = StorageManager(applicationContext)
         val myApi = createRetrofitClientToParseJSON()
-        val cookies =  "connect.sid=" + storageManager.getData("cookies")
+        val cookies =  "connect.sid=" + storageManager.getData(Constants.cookieStorageKey)
 
         var call = myApi.checkSession(cookies)
 

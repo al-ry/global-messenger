@@ -3,12 +3,14 @@ package com.example.kotlinmessenger.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Process
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.StorageManager
 import com.example.kotlinmessenger.storage.User
 import com.xwray.groupie.GroupAdapter
@@ -25,11 +27,11 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.lang.Exception
-
 
 class LastMessagesActivity : AppCompatActivity() {
-    lateinit var socket: Socket
+    private var isConnected : Boolean = false
+    private lateinit var socket: Socket
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_last_messages)
@@ -42,28 +44,29 @@ class LastMessagesActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        finish();
-
+        finish()
     }
+
     private fun startConnection() {
         val storageManager = StorageManager(applicationContext);
+        socket = IO.socket(Constants.url)
+        Toast.makeText(this, socket.connected().toString(), Toast.LENGTH_LONG).show()
         try {
-            socket = IO.socket("http://192.168.43.152:3000/")
-            socket.emit("user_connected", storageManager.getData("phone"))
-            socket.on(Socket.EVENT_CONNECT) {
-                runOnUiThread() {
-                    Toast.makeText(this, "No Problem", Toast.LENGTH_SHORT).show()
-                }
-            }
             socket.connect()
-        } catch (ex:Exception){
+            socket.emit("user_connected", storageManager.getData(Constants.phoneStorageKey))
+            storageManager.putData(Constants.socketStateStorageKey, "true")
+        } catch (ex: Exception) {
             Toast.makeText(this, "Problem", Toast.LENGTH_SHORT).show()
+        }
+
+        socket.on("log_out"){
+            signOut()
         }
     }
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.43.152:3000/")
+            .baseUrl(Constants.url)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -74,7 +77,7 @@ class LastMessagesActivity : AppCompatActivity() {
     fun formChatPage()
     {
         val storageManager = StorageManager(applicationContext);
-        val userPhone = storageManager.getData("currentUserPhone")
+        val userPhone = storageManager.getData(Constants.phoneStorageKey)
         val myApi = createRetrofitClientToParseJSON()
 
         var call = myApi.getChats(userPhone.toString())
@@ -99,7 +102,7 @@ class LastMessagesActivity : AppCompatActivity() {
 
     fun showChatPage(userList: List<User>) {
         val storageManager = StorageManager(applicationContext);
-        val userPhone = storageManager.getData("currentUserPhone")
+        val userPhone = storageManager.getData(Constants.phoneStorageKey)
 
         val adapter = GroupAdapter<GroupieViewHolder>()
         recycle_view_messages.adapter = adapter
@@ -152,6 +155,7 @@ class LastMessagesActivity : AppCompatActivity() {
                 signOut()
             }
         }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -163,7 +167,7 @@ class LastMessagesActivity : AppCompatActivity() {
 
     fun deleteChat(userPhone : String, friendPhone: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.43.152:3000/")
+            .baseUrl(Constants.url)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
@@ -186,7 +190,7 @@ class LastMessagesActivity : AppCompatActivity() {
     fun signOut()
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.43.152:3000/")
+            .baseUrl(Constants.url)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
@@ -194,7 +198,7 @@ class LastMessagesActivity : AppCompatActivity() {
         val myApi = retrofit.create(INodeJS::class.java)
         val storageManager = StorageManager(applicationContext)
 
-        val cookies =  "connect.sid=" + storageManager.getData("cookies")
+        val cookies =  "connect.sid=" + storageManager.getData(Constants.cookieStorageKey)
 
         var call = myApi.logOut(cookies)
 
@@ -204,14 +208,14 @@ class LastMessagesActivity : AppCompatActivity() {
                     "Problems with logging out", Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                socket.emit("disconnect", storageManager.getData("phone"))
+                socket.emit("disconnect", storageManager.getData(Constants.phoneStorageKey))
                 socket.disconnect()
-                storageManager.deleteData("cookies")
-                storageManager.deleteData("phone")
+                storageManager.deleteData(Constants.socketStateStorageKey)
+                storageManager.deleteData(Constants.cookieStorageKey)
                 startActivity(Intent(this@LastMessagesActivity,
                     SignInActivity::class.java))
 
-        }
+            }
         })
     }
 }
