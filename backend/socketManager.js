@@ -34,7 +34,7 @@ module.exports = function(socket) {
     socket.on('send_message', (sender, receiver, msg, date) => {
         if(connectedUsers[receiver] != undefined)
         {
-            newMessage = new Message(sender, receiver, msg, date)
+            var newMessage = new Message(sender, receiver, msg, date)
             var receiverSocketId = connectedUsers[receiver]
             io.to(receiverSocketId).emit("new_message", msg, date)
         }
