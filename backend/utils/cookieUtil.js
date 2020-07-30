@@ -1,8 +1,8 @@
 var cookie = require('cookie-signature');
-var globals = require('../config/config')
+var constants = require('../config/constants')
 
 function SignCookie(token) {
-    return `s:${cookie.sign(token, globals.SESSION_SECRET)}`;
+    return `s:${cookie.sign(token, constants.SESSION_SECRET)}`;
 }
 
 module.exports =  {SignCookie}

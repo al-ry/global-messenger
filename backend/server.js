@@ -5,7 +5,8 @@ var cookieParser = require('cookie-parser')
 
 var cors = require('cors')
 
-var config = require('./config/config')
+var constants = require('./config/constants')
+var sessionDB = require('./db/sessions')
 var registerRouter = require('./routes/registerRouter')
 var loginRouter = require('./routes/loginRouter')
 var searchRouter = require('./routes/searchRouter')
@@ -15,9 +16,9 @@ var addChatRouter = require('./routes/addChatRouter')
 var userChatsRouter = require('./routes/userChatsRouter')
 var deleteChatRouter = require('./routes/deleteChatRouter')
 const socketManager = require('./socketManager')
+
+
 var app = express()
-
-
 var server = require('http').Server(app)
 
 
@@ -29,12 +30,13 @@ app.use(cookieParser())
 
 
 app.use(session({
-    secret: config.SESSION_SECRET,
+    secret: constants.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    store: config.sessionDB,
-    cookie: { maxAge: 7 * 24 * 60 * 60 * 1000, secure: true } // 1 week
+    store: sessionDB,
+    cookie: { maxAge: constants.MAX_AGE, secure: true }
 }))
+
 
 app.use(loginRouter)
 app.use(registerRouter)
