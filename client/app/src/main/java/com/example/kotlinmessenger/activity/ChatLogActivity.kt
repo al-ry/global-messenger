@@ -15,6 +15,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
+import kotlinx.android.synthetic.main.chat_to_row.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,12 +37,11 @@ class ChatLogActivity : AppCompatActivity() {
         val adapter = GroupAdapter<GroupieViewHolder>()
 
         recycler_view_chat_log.adapter = adapter
-        val sendButton : Button = findViewById(R.id.send_button_chat_log)
+        val sendButton: Button = findViewById(R.id.send_button_chat_log)
 
-        sendButton.setOnClickListener{
+        sendButton.setOnClickListener {
             val messageText = message_field_chat_log.text.toString()
-            if (messageText.isNotEmpty() && messageText.isNotBlank())
-            {
+            if (messageText.isNotEmpty() && messageText.isNotBlank()) {
                 adapter.add(
                     ChatToItem(
                         messageText
@@ -52,7 +52,20 @@ class ChatLogActivity : AppCompatActivity() {
                 recycler_view_chat_log.adapter = adapter
                 message_field_chat_log.text.clear()
                 addNewDialog(phoneNumber.toString(), user.telephone)
+
+                MyApplication.m_socket.emit(
+                    "send_message",
+                    phoneNumber,
+                    user.telephone,
+                    messageText
+                )
+
             }
+        }
+
+        MyApplication.m_socket.on("new_message") {
+                args ->
+            adapter.add(ChatFromItem(args[0].toString()))
         }
     }
 
