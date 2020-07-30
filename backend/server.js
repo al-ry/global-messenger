@@ -15,6 +15,7 @@ var logoutRouter = require('./routes/logoutRouter')
 var addChatRouter = require('./routes/addChatRouter')
 var userChatsRouter = require('./routes/userChatsRouter')
 var deleteChatRouter = require('./routes/deleteChatRouter')
+var getHistoryRouter = require('./routes/getHistoryRouter')
 
 var app = express()
 var server = require('http').Server(app)
@@ -43,7 +44,7 @@ app.use(logoutRouter)
 app.use(addChatRouter)
 app.use(deleteChatRouter)
 app.use(userChatsRouter)
-
+app.use(getHistoryRouter)
 
 app.get('/', (req, res) => {
     res.sendFile('index.html', {root: __dirname})

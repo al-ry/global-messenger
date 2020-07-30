@@ -112,6 +112,20 @@ var InsertNewMessage = (from, to, msg, date) => {
     })
 }
 
+var GetMessageHistory = (userPhone, friendPhone) => {
+    var prepSql = db.prepare('SELECT * FROM message_history\n' +
+    'WHERE (sender = ? AND receiver = ?)\n' +
+    'OR (receiver = ? AND sender = ?)\n' +
+    'ORDER BY date ASC;\n')
+    return new Promise((resolve) => {
+        db.serialize(() => {
+            prepSql.all(userPhone, friendPhone, friendPhone, userPhone, (err, result) => {
+                resolve(result)
+            })
+        })
+    })  
+}
+
 module.exports = {GetUserInfoByNumber,
                  InsertNewUser,
                  GetUsersInfoByNumber,
@@ -120,5 +134,6 @@ module.exports = {GetUserInfoByNumber,
                  InsertNewChat,
                  GetChatList,
                  DeleteChat,
-                 InsertNewMessage
+                 InsertNewMessage,
+                 GetMessageHistory
                 };
