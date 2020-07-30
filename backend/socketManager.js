@@ -14,7 +14,7 @@ module.exports = function(socket) {
     socket.on('user_connected', (userPhone, cookie) => {
         if (usersCookies[userPhone] != undefined)
         {
-            io.emit('log_out')
+            io.to(connectedUsers[userPhone]).emit('log_out')
             var sessionId = GetSessionId(usersCookies[userPhone])
             sessionDB.destroy(sessionId)
         }
