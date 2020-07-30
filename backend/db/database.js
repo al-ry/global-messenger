@@ -113,7 +113,7 @@ var InsertNewMessage = (from, to, msg, date) => {
 }
 
 var GetMessageHistory = (userPhone, friendPhone) => {
-    var prepSql = db.prepare('SELECT * FROM message_history\n' +
+    var prepSql = db.prepare('SELECT sender, receiver, date FROM message_history\n' +
     'WHERE (sender = ? AND receiver = ?)\n' +
     'OR (receiver = ? AND sender = ?)\n' +
     'ORDER BY date ASC;\n')
