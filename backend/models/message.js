@@ -10,8 +10,6 @@ module.exports = class Message {
     }
 
     Save() {
-        dbHelper.GetUsersIdByNumber(this.from, this.to).then((result) => {
-            dbHelper.InsertNewMessage(result.userId, result.friendId, this.message, this.time)
-        })
+        dbHelper.InsertNewMessage(this.from, this.to, this.message, this.time)
     }
 }

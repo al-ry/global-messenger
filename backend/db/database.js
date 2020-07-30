@@ -106,7 +106,7 @@ var DeleteChat = (userId, friendId) => {
 
 var InsertNewMessage = (from, to, msg, date) => {
     db.serialize(() => {     
-        var prep = db.prepare('INSERT INTO message_history(id_sender, id_receiver, message, date)'
+        var prep = db.prepare('INSERT INTO message_history(sender, receiver, message, date)'
         + 'VALUES (?, ?, ?, ?);')
         prep.run(from, to, msg, date)
     })
