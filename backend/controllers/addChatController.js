@@ -2,7 +2,7 @@ var User = require('../models/user.js')
 
 exports.Add = (req, res) => {
     var queryData = req.query
-    console.log(queryData.unode, queryData.friendPhone)
+    console.log(queryData.userPhone, queryData.friendPhone)
     User.AddChat(queryData.userPhone, queryData.friendPhone).then((isAdded) => {
         if (isAdded) {
             res.status(200).send('chat is added')
