@@ -14,7 +14,7 @@ module.exports = function(socket) {
     socket.on('user_connected', (userPhone, cookie) => {
         if (usersCookies[userPhone] != undefined)
         {
-            var sessionId = GetSessionId(cookie)
+            var sessionId = GetSessionId(usersCookies[userPhone])
             sessionDB.get(sessionId, (error, session) => { 
                 console.log(session)
             })
