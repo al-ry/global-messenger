@@ -1,6 +1,7 @@
 package com.example.kotlinmessenger.retrofit
 
 import com.example.kotlinmessenger.storage.CookieStorage
+import com.example.kotlinmessenger.storage.Message
 import com.example.kotlinmessenger.storage.User
 import retrofit2.http.*
 import retrofit2.Call
@@ -30,6 +31,12 @@ interface INodeJS {
 
     @GET("chats")
     fun getChats(@Query("userPhone") phone: String) : Call<List<User>>
+
+    @GET("getHistory")
+    fun getHistory(
+        @Query("senderPhone") senderPhone: String,
+        @Query("receiverPhone") receiverPhone: String
+    ): Call<List<Message>>
 
     @GET("addChat")
     fun addChat(
