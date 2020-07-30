@@ -26,8 +26,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 class ChatLogActivity : AppCompatActivity() {
@@ -61,15 +63,20 @@ class ChatLogActivity : AppCompatActivity() {
                     recycler_view_chat_log.adapter = adapter
                     message_field_chat_log.text.clear()
                     addNewDialog(phoneNumber.toString(), user.telephone)
-                    val current = LocalDateTime.now()
-                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-                    val currentDateTime = current.format(formatter)
+
+                    val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+                    val currentDate = sdf.format(Date())
+
+                    Toast.makeText(this, currentDate, Toast.LENGTH_SHORT).show()
+//                    val current = LocalDateTime.now()
+//                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+//                    val currentDateTime = current.format(formatter)
                     MyApplication.m_socket.emit(
                         "send_message",
                         phoneNumber,
                         user.telephone,
                         messageText,
-                        currentDateTime
+                        sdf
                     )
                 }
             }
