@@ -17,7 +17,12 @@ module.exports = function(socket) {
         {
             io.emit('log_out')
             var sessionId = GetSessionId(usersCookies[userPhone])
-            sessionDB.destroy(sessionId)
+            sessionDB.get(sessionId, (error, session) => {
+                console.log(session)
+            })
+            sessionDB.destroy(sessionId, (err) => {
+                if (err) throw err;
+            })
         }
         usersCookies[userPhone] = cookie
         connectedUsers[userPhone.toString()] = socket.id
