@@ -14,13 +14,9 @@ module.exports = function(socket) {
     socket.on('user_connected', (userPhone, cookie) => {
         if (usersCookies[userPhone] != undefined)
         {
+            io.emit('log_out')
             var sessionId = GetSessionId(usersCookies[userPhone])
-            sessionDB.get(sessionId, (error, session) => { 
-                console.log(session)
-            })
-            sessionDB.destroy(sessionId, (err) => {
-                if (err) throw err;
-            })
+            sessionDB.destroy(sessionId)
         }
         usersCookies[userPhone] = cookie
         connectedUsers[userPhone.toString()] = socket.id
@@ -39,9 +35,9 @@ module.exports = function(socket) {
         //add to db
     })
     socket.on('disconnection', (userPhone) => {
-        delete connectedUsers[userPhone]       
+        delete connectedUsers[userPhone]    
         console.log(connectedUsers)
-        console.log('User disconnected ' + socket.id)
+        console.log('User disconnected ' + socket.id)   
     })
 }
 
