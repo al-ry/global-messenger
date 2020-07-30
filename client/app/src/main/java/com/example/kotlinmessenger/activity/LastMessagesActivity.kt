@@ -46,6 +46,7 @@ class LastMessagesActivity : AppCompatActivity() {
 
         MyApplication.m_socket.on("log_out")
         {
+            //Toast.makeText(this, "Somebody logged in your account.\nSo sorry", Toast.LENGTH_SHORT).show()
             signOut()
         }
 
