@@ -30,6 +30,7 @@ class FindUserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_find_user)
 
         val userPhoneEditText: EditText = findViewById(R.id.user_phone_for_search)
+        var phoneForSearch : String
 
         userPhoneEditText.addTextChangedListener(object: TextWatcher
         {
@@ -40,7 +41,10 @@ class FindUserActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                findUser(user_phone_for_search.text.toString())
+                phoneForSearch = user_phone_for_search.text.toString()
+
+                if (phoneForSearch.isNotEmpty())
+                    findUser(user_phone_for_search.text.toString())
             }
         })
     }
