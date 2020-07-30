@@ -25,12 +25,12 @@ module.exports = function(socket) {
     })
 
 
-    socket.on('send_message', (data) => {
+    socket.on('send_message', (sender, receiver, msg) => {
         if(connectedUsers[data.receiver] != undefined)
         {
             //newMessage = new Message(data.sender, data.receiver, data.msg, data.date)
-            var receiverSocketId = connectedUsers[data.receiver]
-            io.to(receiverSocketId).emit("new_message", data.msg)
+            var receiverSocketId = connectedUsers[receiver]
+            io.to(receiverSocketId).emit("new_message", msg)
         }
         //newMessage.Save()
         //add to db
