@@ -20,12 +20,10 @@ CREATE TABLE "user_has_friend" (
 
 CREATE TABLE "message_history" (
 	"id_message_history"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-	"id_sender"	INTEGER NOT NULL,
-	"id_receiver"	INTEGER NOT NULL,
+	"sender"	TEXT NOT NULL,
+	"receiver"	TEXT NOT NULL,
 	"message" TEXT NOT NULL,
-	"date" TEXT NOT NULL,
-	FOREIGN KEY("id_sender") REFERENCES "user"("id_user"),
-	FOREIGN KEY("id_receiver") REFERENCES "user"("id_user")
+	"date" TEXT NOT NULL
 );
 
 CREATE UNIQUE INDEX iu_telephone_user
@@ -61,4 +59,15 @@ INNER JOIN user ON id_friend = user.id_user
 
 
 >>>>>>> Stashed changes
+
+
+SELECT  datetime('now')
+
+
+SELECT telephone, message, date FROM 
+(SELECT * FROM message_history
+WHERE (sender = '79024669422' AND receiver = '99999999999') OR (receiver = '99999999999' AND sender = '79024669422')
+ORDER BY date ASC)
+
+
 
