@@ -51,7 +51,7 @@ app.use(userChatsRouter)
 app.get('/', (req, res) => {
     res.sendFile('index.html', {root: __dirname})
 })
-const io = require("socket.io")(server)
+var io = module.exports.io = require("socket.io")(server)
 
 io.on('connection', socketManager)
 
@@ -59,7 +59,7 @@ server.listen(3000, () => {
     console.log('Server started on port 3000...')
 })
 
-module.exports = io
+
 
 
 
