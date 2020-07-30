@@ -53,6 +53,9 @@ app.get('/', (req, res) => {
 })
 const io = require("socket.io")(server)
 
+var connectedUsers = [];
+var usersCookies = [];
+
 io.on('connection', function(socket) {
 
     console.log('User connected:' + socket.id)
