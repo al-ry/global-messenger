@@ -4,10 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
 import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.StorageManager
+import io.socket.client.IO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,6 +26,17 @@ class LoadingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages)
         checkUserSession()
+        storageManager = StorageManager(applicationContext)
+
+        setConnetcion(storageManager.getData(Constants.phoneStorageKey).toString())
+    }
+
+    private fun setConnetcion(phone: String) {
+        val storageManager = StorageManager(applicationContext)
+        MyApplication.m_socket = IO.socket(Constants.url)
+        MyApplication.m_socket.connect()
+        MyApplication.m_socket.emit("user_connected", phone,
+            storageManager.getData(Constants.cookieStorageKey))
     }
 
     private fun createRetrofitClientToParseJSON(): INodeJS {

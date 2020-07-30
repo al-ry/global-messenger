@@ -28,6 +28,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import kotlin.math.sign
 
 class LastMessagesActivity : AppCompatActivity() {
     private var isConnected : Boolean = false
@@ -41,7 +42,13 @@ class LastMessagesActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         formChatPage()
-        startConnection()
+//        startConnection()
+
+        MyApplication.m_socket.on("log_out")
+        {
+            signOut()
+        }
+
     }
 
     override fun onBackPressed() {
@@ -49,29 +56,7 @@ class LastMessagesActivity : AppCompatActivity() {
     }
 
     private fun startConnection() {
-//        val storageManager = StorageManager(applicationContext);
-//        val phone = storageManager.getData(Constants.phoneStorageKey)
-//
-//        socket = IO.socket(Constants.url)
-//        try {
-//            socket.connect()
-//            //socket.emit("user_connected", phone.toString())
-////            socket.on("new_connection")
-////            {
-////                socket.connect()
-////                socket.emit("new_connection", phone.toString())
-////                Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
-////            }
-//
-//            Toast.makeText(this, phone.toString(), Toast.LENGTH_SHORT).show()
-//            storageManager.putData(Constants.socketStateStorageKey, "true")
-//        } catch (ex: Exception) {
-//            Toast.makeText(this, "Problem", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        socket.on("log_out"){
-//            signOut()
-//        }
+
     }
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
@@ -218,18 +203,13 @@ class LastMessagesActivity : AppCompatActivity() {
                     "Problems with logging out", Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                //val socket : Socket
-                //socket = MyApplication.getSocket()
                 var phone = storageManager.getData(Constants.phoneStorageKey).toString()
                 MyApplication.m_socket.emit("disconnection" , phone)
                 MyApplication.m_socket.disconnect()
-                //socket.emit("disconnect", storageManager.getData(Constants.phoneStorageKey))
-                //socket.disconnect()
                 storageManager.deleteData(Constants.socketStateStorageKey)
                 storageManager.deleteData(Constants.cookieStorageKey)
                 startActivity(Intent(this@LastMessagesActivity,
                     SignInActivity::class.java))
-
             }
         })
     }
