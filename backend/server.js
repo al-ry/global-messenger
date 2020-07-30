@@ -15,12 +15,9 @@ var logoutRouter = require('./routes/logoutRouter')
 var addChatRouter = require('./routes/addChatRouter')
 var userChatsRouter = require('./routes/userChatsRouter')
 var deleteChatRouter = require('./routes/deleteChatRouter')
-const socketManager = require('./socketManager')
-
 
 var app = express()
 var server = require('http').Server(app)
-
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
@@ -52,6 +49,8 @@ app.get('/', (req, res) => {
     res.sendFile('index.html', {root: __dirname})
 })
 var io = module.exports.io = require("socket.io")(server)
+
+const socketManager = require('./socketManager')
 
 io.on('connection', socketManager)
 
