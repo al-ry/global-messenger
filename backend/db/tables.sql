@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS "user_has_friend";
 DROP TABLE IF EXISTS "user";
+DROP TABLE IF EXISTS "message_history";
 
 CREATE TABLE "user" (
 	"id_user"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -15,6 +16,16 @@ CREATE TABLE "user_has_friend" (
 	"id_friend"	INTEGER NOT NULL,
 	FOREIGN KEY("id_user") REFERENCES "user"("id_user"),
 	FOREIGN KEY("id_friend") REFERENCES "user"("id_user")
+);
+
+CREATE TABLE "message_history" (
+	"id_message_history"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"id_sender"	INTEGER NOT NULL,
+	"id_receiver"	INTEGER NOT NULL,
+	"message" TEXT NOT NULL,
+	"date" TEXT NOT NULL,
+	FOREIGN KEY("id_sender") REFERENCES "user"("id_user"),
+	FOREIGN KEY("id_receiver") REFERENCES "user"("id_user")
 );
 
 CREATE UNIQUE INDEX iu_telephone_user
