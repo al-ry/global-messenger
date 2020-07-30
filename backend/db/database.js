@@ -101,9 +101,6 @@ var DeleteChat = (userId, friendId) => {
     })
 }
 
-
-
-
 var InsertNewMessage = (from, to, msg, date) => {
     db.serialize(() => {     
         var prep = db.prepare('INSERT INTO message_history(sender, receiver, message, date)'
@@ -119,7 +116,7 @@ var GetMessageHistory = (userPhone, friendPhone) => {
     'ORDER BY date ASC;\n')
     return new Promise((resolve) => {
         db.serialize(() => {
-            prepSql.all(userPhone, friendPhone, friendPhone, userPhone, (err, result) => {
+            prepSql.all(userPhone, friendPhone, userPhone, friendPhone, (err, result) => {
                 resolve(result)
             })
         })
