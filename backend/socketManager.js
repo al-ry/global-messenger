@@ -18,7 +18,7 @@ module.exports = function(socket) {
             sessionDB.destroy(sessionId)
         }
         usersCookies[userPhone] = cookie
-        connectedUsers[userPhone.ToString()] = socket.id
+        connectedUsers[userPhone.toString()] = socket.id
         console.log(connectedUsers)
     })
 
