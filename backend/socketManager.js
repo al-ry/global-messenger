@@ -15,7 +15,9 @@ module.exports = function(socket) {
         if (usersCookies[userPhone] != undefined)
         {
             var sessionId = GetSessionId(cookie)
-            sessionDB.destroy(sessionId)
+            sessionDB.destroy(sessionId, (err) => {
+                if (err) throw err;
+            })
         }
         usersCookies[userPhone] = cookie
         connectedUsers[userPhone.toString()] = socket.id
