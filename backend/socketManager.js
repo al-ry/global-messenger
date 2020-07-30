@@ -31,11 +31,10 @@ module.exports = function(socket) {
         console.log('=======user_connected=======')
     })
 
-
     socket.on('send_message', (sender, receiver, msg) => {
         if(connectedUsers[receiver] != undefined)
         {
-            newMessage = new Message(data.sender, data.receiver, data.msg, data.date)
+            newMessage = new Message(sender, receiver, msg, date)
             var receiverSocketId = connectedUsers[receiver]
             io.to(receiverSocketId).emit("new_message", msg)
         }
