@@ -1,10 +1,12 @@
 package com.example.kotlinmessenger.activity
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
@@ -24,9 +26,12 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class ChatLogActivity : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
@@ -56,12 +61,15 @@ class ChatLogActivity : AppCompatActivity() {
                     recycler_view_chat_log.adapter = adapter
                     message_field_chat_log.text.clear()
                     addNewDialog(phoneNumber.toString(), user.telephone)
-
+                    val current = LocalDateTime.now()
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                    val currentDateTime = current.format(formatter)
                     MyApplication.m_socket.emit(
                         "send_message",
                         phoneNumber,
                         user.telephone,
-                        messageText
+                        messageText,
+                        currentDateTime
                     )
                 }
             }
