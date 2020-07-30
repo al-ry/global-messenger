@@ -15,6 +15,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
+import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
 import retrofit2.Call
@@ -39,6 +40,7 @@ class ChatLogActivity : AppCompatActivity() {
         recycler_view_chat_log.adapter = adapter
         val sendButton: Button = findViewById(R.id.send_button_chat_log)
 
+        val phoneNumber = storageManager.getData(Constants.phoneStorageKey)
         sendButton.setOnClickListener {
             val messageText = message_field_chat_log.text.toString()
             if (messageText.isNotEmpty() && messageText.isNotBlank()) {
@@ -47,25 +49,30 @@ class ChatLogActivity : AppCompatActivity() {
                         messageText
                     )
                 )
-                val phoneNumber = storageManager.getData(Constants.phoneStorageKey)
-                Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show()
-                recycler_view_chat_log.adapter = adapter
-                message_field_chat_log.text.clear()
-                addNewDialog(phoneNumber.toString(), user.telephone)
 
-                MyApplication.m_socket.emit(
-                    "send_message",
-                    phoneNumber,
-                    user.telephone,
-                    messageText
-                )
+                if (phoneNumber != user.telephone)
+                {
+                    Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show()
+                    recycler_view_chat_log.adapter = adapter
+                    message_field_chat_log.text.clear()
+                    addNewDialog(phoneNumber.toString(), user.telephone)
 
+                    MyApplication.m_socket.emit(
+                        "send_message",
+                        phoneNumber,
+                        user.telephone,
+                        messageText
+                    )
+                }
             }
         }
 
         MyApplication.m_socket.on("new_message") {
-                args ->
-            adapter.add(ChatFromItem(args[0].toString()))
+            args->
+            runOnUiThread {
+                adapter.add(ChatFromItem(args[0].toString()))
+            }
+
         }
     }
 
@@ -97,7 +104,7 @@ class ChatLogActivity : AppCompatActivity() {
 class ChatFromItem(val message: String) : Item<GroupieViewHolder>() {
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         if (message.isNotEmpty())
-        viewHolder.itemView.message_to_text.text = message
+        viewHolder.itemView.message_from_text.text = message
     }
 
     override fun getLayout(): Int {

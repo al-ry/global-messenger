@@ -26,9 +26,6 @@ class LoadingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages)
         checkUserSession()
-        storageManager = StorageManager(applicationContext)
-
-        setConnetcion(storageManager.getData(Constants.phoneStorageKey).toString())
     }
 
     private fun setConnetcion(phone: String) {
@@ -61,6 +58,8 @@ class LoadingActivity : AppCompatActivity() {
             {
                 if  (response.code() == 200) {
 
+                    storageManager = StorageManager(applicationContext)
+                    setConnetcion(storageManager.getData(Constants.phoneStorageKey).toString())
                     val intent = Intent(this@LoadingActivity, LastMessagesActivity::class.java)
                     startActivity(intent)
 
