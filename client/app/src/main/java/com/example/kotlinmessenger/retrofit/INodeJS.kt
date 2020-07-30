@@ -32,7 +32,7 @@ interface INodeJS {
     @GET("chats")
     fun getChats(@Query("userPhone") phone: String) : Call<List<User>>
 
-    @GET("get_history")
+    @GET("getHistory")
     fun getHistory(
         @Query("senderPhone") senderPhone: String,
         @Query("receiverPhone") receiverPhone: String
