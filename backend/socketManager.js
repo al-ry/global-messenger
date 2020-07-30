@@ -6,6 +6,7 @@ var connectedUsers = [];
 var usersCookies = [];
 
 module.exports = function(socket) {
+
     console.log('User connected:' + socket.id)
 
     // connectedUsers.push(socket.id)
@@ -14,7 +15,7 @@ module.exports = function(socket) {
     socket.on('user_connected', (userPhone, cookie) => {
         if (usersCookies[userPhone] != undefined)
         {
-            io.to(connectedUsers[userPhone]).emit('log_out')
+            io.sockets.emit('log_out', cookie)
             var sessionId = GetSessionId(usersCookies[userPhone])
             sessionDB.destroy(sessionId)
         }
