@@ -17,9 +17,10 @@
             android:src="@mipmap/ic_launcher" />
 
         <TextView
-            android:id="@+id/char_username"
+            android:id="@+id/chat_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_toEndOf="@id/image_view"
             android:text="username"
             android:textColor="@android:color/black"
@@ -30,7 +31,9 @@
             android:id="@+id/chat_last_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/char_username"
+            android:layout_below="@+id/chat_username"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
             android:layout_toEndOf="@id/image_view"
             android:text="Here will be last message" />
     </RelativeLayout>

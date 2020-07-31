@@ -3,7 +3,6 @@ package com.example.kotlinmessenger.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.Process
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -11,14 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.storage.Chat
 import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.StorageManager
 import com.example.kotlinmessenger.storage.User
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import io.socket.client.IO
-import io.socket.client.Socket
 import kotlinx.android.synthetic.main.activity_last_messages.*
 import kotlinx.android.synthetic.main.found_chat_row.view.*
 import retrofit2.Call
@@ -28,7 +26,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import kotlin.math.sign
 
 class LastMessagesActivity : AppCompatActivity() {
     private var isConnected : Boolean = false
@@ -78,8 +75,8 @@ class LastMessagesActivity : AppCompatActivity() {
 
         var call = myApi.getChats(userPhone.toString())
 
-        call.enqueue(object : Callback<List<User>> {
-            override fun onResponse(all: Call<List<User>>, response: Response<List<User>>)
+        call.enqueue(object : Callback<List<Chat>> {
+            override fun onResponse(all: Call<List<Chat>>, response: Response<List<Chat>>)
             {
                 if  (response.code() == 200) {
                     val body = response.body()
@@ -89,34 +86,34 @@ class LastMessagesActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<List<User>>, t: Throwable) {
+            override fun onFailure(call: Call<List<Chat>>, t: Throwable) {
                 Toast.makeText(this@LastMessagesActivity, "There was an error with authorization",
                     Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    fun showChatPage(userList: List<User>) {
+    fun showChatPage(userList: List<Chat>) {
         val storageManager = StorageManager(applicationContext);
-        val userPhone = storageManager.getData(Constants.phoneStorageKey)
+        val userPhone = storageManager.getData(Constants.phoneStorageKey).toString()
 
         val adapter = GroupAdapter<GroupieViewHolder>()
         recycle_view_messages.adapter = adapter
 
-        for (user in userList) {
-            adapter.add(MessageHolder(user))
+        for (chat in userList) {
+            adapter.add(MessageHolder(chat, userPhone))
         }
 
         adapter.setOnItemLongClickListener { item, view ->
             val userItem = item as MessageHolder
-            createPopUpMenu(userPhone, item.user.telephone, adapter, userItem)
+            createPopUpMenu(userPhone, item.chat.friendPhone, adapter, userItem)
             true
         }
 
         adapter.setOnItemClickListener{ item, view ->
             val userItem = item as MessageHolder
             val intent = Intent(view.context, ChatLogActivity::class.java)
-            intent.putExtra("user", userItem.user)
+            intent.putExtra("user", User("", item.chat.friendPhone, item.chat.friendName))
             startActivity(intent)
         }
     }
@@ -216,13 +213,17 @@ class LastMessagesActivity : AppCompatActivity() {
     }
 }
 
-class  MessageHolder(val user: User) : Item<GroupieViewHolder>()
+class  MessageHolder(val chat: Chat, val userPhone: String) : Item<GroupieViewHolder>()
 {
     override fun getLayout(): Int {
         return R.layout.found_chat_row
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.char_username.text = user.name
+        viewHolder.itemView.chat_username.text = chat.friendName
+        if (chat.senderPhone == userPhone)
+            viewHolder.itemView.chat_last_message.text = "You: " + chat.message
+        else
+            viewHolder.itemView.chat_last_message.text = chat.message
     }
 }
