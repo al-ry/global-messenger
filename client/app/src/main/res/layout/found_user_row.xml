@@ -27,7 +27,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/found_phone"
+            android:id="@+id/chat_last_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/found_username"

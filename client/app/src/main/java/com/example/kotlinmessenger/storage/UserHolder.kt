@@ -13,7 +13,7 @@ class  UserHolder(val user: User) : Item<GroupieViewHolder>()
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.found_username.text = user.name
-        viewHolder.itemView.found_phone.text = user.telephone
+        viewHolder.itemView.chat_last_message.text = user.telephone
     }
 
 }

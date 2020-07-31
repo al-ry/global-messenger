@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.storage.Chat
 import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.StorageManager
 import com.example.kotlinmessenger.storage.User
@@ -78,8 +79,8 @@ class LastMessagesActivity : AppCompatActivity() {
 
         var call = myApi.getChats(userPhone.toString())
 
-        call.enqueue(object : Callback<List<User>> {
-            override fun onResponse(all: Call<List<User>>, response: Response<List<User>>)
+        call.enqueue(object : Callback<List<Chat>> {
+            override fun onResponse(all: Call<List<Chat>>, response: Response<List<Chat>>)
             {
                 if  (response.code() == 200) {
                     val body = response.body()
@@ -89,34 +90,34 @@ class LastMessagesActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<List<User>>, t: Throwable) {
+            override fun onFailure(call: Call<List<Chat>>, t: Throwable) {
                 Toast.makeText(this@LastMessagesActivity, "There was an error with authorization",
                     Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    fun showChatPage(userList: List<User>) {
+    fun showChatPage(userList: List<Chat>) {
         val storageManager = StorageManager(applicationContext);
         val userPhone = storageManager.getData(Constants.phoneStorageKey)
 
         val adapter = GroupAdapter<GroupieViewHolder>()
         recycle_view_messages.adapter = adapter
 
-        for (user in userList) {
-            adapter.add(MessageHolder(user))
+        for (chat in userList) {
+            adapter.add(MessageHolder(chat))
         }
 
         adapter.setOnItemLongClickListener { item, view ->
             val userItem = item as MessageHolder
-            createPopUpMenu(userPhone, item.user.telephone, adapter, userItem)
+            createPopUpMenu(userPhone, item.chat.friendPhone, adapter, userItem)
             true
         }
 
         adapter.setOnItemClickListener{ item, view ->
             val userItem = item as MessageHolder
             val intent = Intent(view.context, ChatLogActivity::class.java)
-            intent.putExtra("user", userItem.user)
+            intent.putExtra("chat", userItem.chat)
             startActivity(intent)
         }
     }
@@ -216,13 +217,15 @@ class LastMessagesActivity : AppCompatActivity() {
     }
 }
 
-class  MessageHolder(val user: User) : Item<GroupieViewHolder>()
+class  MessageHolder(val chat: Chat) : Item<GroupieViewHolder>()
 {
     override fun getLayout(): Int {
         return R.layout.found_chat_row
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.char_username.text = user.name
+        viewHolder.itemView.char_username.text = chat.friendName
+        viewHolder.itemView.chat_last_message.text = chat.message
+
     }
 }

@@ -3,17 +3,13 @@ package com.example.kotlinmessenger.activity
 import android.os.Build
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
+import android.widget.EditText
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
-import com.example.kotlinmessenger.storage.Constants
-import com.example.kotlinmessenger.storage.Message
-import com.example.kotlinmessenger.storage.StorageManager
-import com.example.kotlinmessenger.storage.User
+import com.example.kotlinmessenger.storage.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -31,6 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
+@Suppress("DEPRECATION")
 class ChatLogActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,65 +35,13 @@ class ChatLogActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat_log)
 
         val storageManager = StorageManager(applicationContext);
-        val user = intent.getParcelableExtra<User>("user")
-        supportActionBar?.title = user?.name + " | " + user?.telephone
-
-
+        val chat: Chat = intent.getParcelableExtra<Chat>("chat")
+        supportActionBar?.title = chat?.friendName + " | " + chat?.friendPhone
 
         val adapter = GroupAdapter<GroupieViewHolder>()
-
         recycler_view_chat_log.adapter = adapter
-        
-        recycler_view_chat_log.adapter = LoadingHistory(
-            storageManager.getData(Constants.phoneStorageKey).toString(),
-            user.telephone)
-        val sendButton: Button = findViewById(R.id.send_button_chat_log)
-
-
-        val phoneNumber = storageManager.getData(Constants.phoneStorageKey)
-        sendButton.setOnClickListener {
-            val messageText = message_field_chat_log.text.toString()
-            if (messageText.isNotEmpty() && messageText.isNotBlank()) {
-                adapter.add(
-                    ChatToItem(
-                        messageText
-                    )
-                )
-
-                if (phoneNumber != user.telephone)
-                {
-                    Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show()
-                    recycler_view_chat_log.adapter = adapter
-                    message_field_chat_log.text.clear()
-                    addNewDialog(phoneNumber.toString(), user.telephone)
-                    val dateFormat = SimpleDateFormat(
-                        "yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-
-                    val date = Date()
-                    val currentDate = dateFormat.format(date)
-                    MyApplication.m_socket.emit(
-                        "send_message",
-                        phoneNumber,
-                        user.telephone,
-                        messageText,
-                        currentDate
-                    )
-                }
-            }
-        }
-
-        MyApplication.m_socket.on("new_message") {
-            args->
-            runOnUiThread {
-                adapter.add(ChatFromItem(args[0].toString()))
-            }
-
-        }
-    }
-
-    private fun LoadingHistory(senderPhone : String, receiverPhone: String): GroupAdapter<GroupieViewHolder>? {
-        val adapter = GroupAdapter<GroupieViewHolder>()
-
+        val senderPhone = storageManager.getData(Constants.phoneStorageKey).toString()
+        val receiverPhone = chat.friendPhone
         val myApi = createRetrofitClientToParseJSON()
         var call = myApi.getHistory(senderPhone, receiverPhone)
 
@@ -110,19 +55,66 @@ class ChatLogActivity : AppCompatActivity() {
                         else
                             adapter.add(ChatFromItem(item.text))
                     }
+                    recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
+
                 }
-                showMessages(body)
             }
 
             override fun onFailure(call: Call<List<Message>>, t: Throwable) {
             }
         })
 
-        return adapter
+
+        val sendButton: Button = findViewById(R.id.send_button_chat_log)
+        val chatLogMessageField : EditText = findViewById(R.id.message_field_chat_log)
+
+        chatLogMessageField.setOnClickListener{
+            recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
+        }
+
+
+        val phoneNumber = storageManager.getData(Constants.phoneStorageKey)
+        sendButton.setOnClickListener {
+            val messageText = message_field_chat_log.text.toString()
+            if (messageText.isNotEmpty() && messageText.isNotBlank()) {
+                adapter.add(ChatToItem(messageText))
+                message_field_chat_log.text.clear()
+                recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
+                if (phoneNumber != chat.friendPhone)
+                {
+                    //Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show()
+                    addNewDialog(phoneNumber.toString(), chat.friendPhone)
+                    val dateFormat = SimpleDateFormat(
+                        "yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+                    val date = Date()
+                    val currentDate = dateFormat.format(date)
+                    MyApplication.m_socket.emit(
+                        "send_message",
+                        phoneNumber,
+                        chat.friendPhone,
+                        messageText,
+                        currentDate
+                    )
+                }
+            }
+        }
+
+        MyApplication.m_socket.on("new_message") {
+            args->
+            runOnUiThread {
+                adapter.add(ChatFromItem(args[0].toString()))
+                recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
+            }
+
+        }
     }
 
-    private fun showMessages(body: List<Message>?) {
+    private fun LoadingHistory(senderPhone : String, receiverPhone: String): GroupAdapter<GroupieViewHolder>? {
+        val adapter = GroupAdapter<GroupieViewHolder>()
 
+
+        return adapter
     }
 
     private fun addNewDialog(fromNumber: String, toNumber: String) {
