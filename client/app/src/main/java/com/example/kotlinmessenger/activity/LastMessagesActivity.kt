@@ -3,7 +3,6 @@ package com.example.kotlinmessenger.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.Process
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -18,8 +17,6 @@ import com.example.kotlinmessenger.storage.User
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import io.socket.client.IO
-import io.socket.client.Socket
 import kotlinx.android.synthetic.main.activity_last_messages.*
 import kotlinx.android.synthetic.main.found_chat_row.view.*
 import retrofit2.Call
@@ -29,7 +26,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import kotlin.math.sign
 
 class LastMessagesActivity : AppCompatActivity() {
     private var isConnected : Boolean = false
@@ -99,13 +95,13 @@ class LastMessagesActivity : AppCompatActivity() {
 
     fun showChatPage(userList: List<Chat>) {
         val storageManager = StorageManager(applicationContext);
-        val userPhone = storageManager.getData(Constants.phoneStorageKey)
+        val userPhone = storageManager.getData(Constants.phoneStorageKey).toString()
 
         val adapter = GroupAdapter<GroupieViewHolder>()
         recycle_view_messages.adapter = adapter
 
         for (chat in userList) {
-            adapter.add(MessageHolder(chat))
+            adapter.add(MessageHolder(chat, userPhone))
         }
 
         adapter.setOnItemLongClickListener { item, view ->
@@ -117,7 +113,7 @@ class LastMessagesActivity : AppCompatActivity() {
         adapter.setOnItemClickListener{ item, view ->
             val userItem = item as MessageHolder
             val intent = Intent(view.context, ChatLogActivity::class.java)
-            intent.putExtra("chat", userItem.chat)
+            intent.putExtra("user", User("", item.chat.friendPhone, item.chat.friendName))
             startActivity(intent)
         }
     }
@@ -217,15 +213,17 @@ class LastMessagesActivity : AppCompatActivity() {
     }
 }
 
-class  MessageHolder(val chat: Chat) : Item<GroupieViewHolder>()
+class  MessageHolder(val chat: Chat, val userPhone: String) : Item<GroupieViewHolder>()
 {
     override fun getLayout(): Int {
         return R.layout.found_chat_row
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.char_username.text = chat.friendName
-        viewHolder.itemView.chat_last_message.text = chat.message
-
+        viewHolder.itemView.chat_username.text = chat.friendName
+        if (chat.senderPhone == userPhone)
+            viewHolder.itemView.chat_last_message.text = "You: " + chat.message
+        else
+            viewHolder.itemView.chat_last_message.text = chat.message
     }
 }

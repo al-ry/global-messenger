@@ -35,13 +35,13 @@ class ChatLogActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat_log)
 
         val storageManager = StorageManager(applicationContext);
-        val chat: Chat = intent.getParcelableExtra<Chat>("chat")
-        supportActionBar?.title = chat?.friendName + " | " + chat?.friendPhone
+        val user = intent.getParcelableExtra<User>("user")
+        supportActionBar?.title = user?.name + " | " + user?.telephone
 
         val adapter = GroupAdapter<GroupieViewHolder>()
         recycler_view_chat_log.adapter = adapter
         val senderPhone = storageManager.getData(Constants.phoneStorageKey).toString()
-        val receiverPhone = chat.friendPhone
+        val receiverPhone = user.telephone
         val myApi = createRetrofitClientToParseJSON()
         var call = myApi.getHistory(senderPhone, receiverPhone)
 
@@ -80,10 +80,10 @@ class ChatLogActivity : AppCompatActivity() {
                 adapter.add(ChatToItem(messageText))
                 message_field_chat_log.text.clear()
                 recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
-                if (phoneNumber != chat.friendPhone)
+                if (phoneNumber != user.telephone)
                 {
                     //Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show()
-                    addNewDialog(phoneNumber.toString(), chat.friendPhone)
+                    addNewDialog(phoneNumber.toString(), user.telephone)
                     val dateFormat = SimpleDateFormat(
                         "yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
@@ -92,7 +92,7 @@ class ChatLogActivity : AppCompatActivity() {
                     MyApplication.m_socket.emit(
                         "send_message",
                         phoneNumber,
-                        chat.friendPhone,
+                        user.telephone,
                         messageText,
                         currentDate
                     )

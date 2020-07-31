@@ -27,12 +27,15 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/chat_last_message"
+            android:id="@+id/found_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/found_username"
-            android:layout_toEndOf="@id/image_view"
-            android:text="Line 2" />
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="7dp"
+            android:layout_toEndOf="@+id/image_view"
+            android:text="TextView" />
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
