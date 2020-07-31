@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
@@ -45,6 +46,22 @@ class LastMessagesActivity : AppCompatActivity() {
         {
             //Toast.makeText(this, "Somebody logged in your account.\nSo sorry", Toast.LENGTH_SHORT).show()
             signOut()
+        }
+
+        recycle_view_messages.adapter
+
+        MyApplication.m_socket.on("display_last_message") {
+                args->
+            runOnUiThread {
+                for (i in 0 until recycle_view_messages.childCount) {
+                    val rv : RecyclerView = findViewById(R.id.recycle_view_messages)
+                    val holder: MessageHolder = rv.findViewHolderForAdapterPosition(i) as MessageHolder
+                    if (holder.chat.friendPhone == args[0])
+                    {
+                        holder.chat.message = args[1] as String
+                    }
+                }
+            }
         }
 
     }

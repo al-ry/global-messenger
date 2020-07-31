@@ -71,3 +71,13 @@ ORDER BY date ASC)
 
 
 
+SELECT friendPhone, friendName, sender, message, date FROM
+(SELECT userName, userPhone, telephone AS friendPhone, name AS friendName FROM
+(SELECT name AS userName,user.id_user AS userId, telephone AS userPhone, id_friend AS friendId FROM user
+INNER JOIN user_has_friend ON user.id_user = user_has_friend.id_user
+WHERE user.telephone = '79024669422')
+INNER JOIN user ON user.id_user = friendId)
+INNER JOIN message_history ON (sender = userPhone AND receiver = friendPhone)
+ OR (receiver = userPhone AND sender = friendPhone)
+GROUP BY friendPhone
+HAVING MAX(date)

@@ -82,7 +82,6 @@ class ChatLogActivity : AppCompatActivity() {
                 recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
                 if (phoneNumber != user.telephone)
                 {
-                    //Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show()
                     addNewDialog(phoneNumber.toString(), user.telephone)
                     val dateFormat = SimpleDateFormat(
                         "yyyy-MM-dd HH:mm:ss", Locale.getDefault())
@@ -129,7 +128,6 @@ class ChatLogActivity : AppCompatActivity() {
             override fun onFailure(call: Call<Void>, t: Throwable) {
             }
         })
-
     }
 
     private fun createRetrofitClientToParseJSON(): INodeJS {

@@ -35,7 +35,7 @@
 
         <activity
             android:name=".activity.LastMessagesActivity"
-            android:label="Last messages" />
+            android:label="Messages" />
         <activity android:name=".activity.SignInActivity"/>
 
         <activity android:name=".activity.LoadingActivity"

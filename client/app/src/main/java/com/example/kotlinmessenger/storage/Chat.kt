@@ -16,7 +16,7 @@ data class Chat (
     val senderPhone : String = "",
 
     @SerializedName("message")
-    val message : String = "",
+    var message : String = "",
 
     @SerializedName("date ")
     val date  : String = ""
