@@ -48,11 +48,16 @@ var GetUsersIdByNumber = function(userPhone, friendPhone) {
 }
 
 var GetChatList = function(userPhone) {
-    var prepSql = db.prepare('SELECT telephone, name FROM\n' +
-    '(SELECT user.id_user AS userId, id_friend AS friendId FROM user\n' +
+    var prepSql = db.prepare('SELECT friendPhone, friendName, sender, message, date FROM\n' +
+    '(SELECT userName, userPhone, telephone AS friendPhone, name AS friendName FROM\n' +
+    '(SELECT name AS userName,user.id_user AS userId, telephone AS userPhone, id_friend AS friendId FROM user\n' +
     'INNER JOIN user_has_friend ON user.id_user = user_has_friend.id_user\n' +
     'WHERE user.telephone = ?)\n' +
-    'INNER JOIN user ON user.id_user = friendId;\n')
+    'INNER JOIN user ON user.id_user = friendId)\n' +
+    'INNER JOIN message_history ON (sender = userPhone AND receiver = friendPhone)\n' +
+    ' OR (receiver = userPhone AND sender = friendPhone)\n' +
+    'GROUP BY friendPhone\n' +
+    'HAVING MAX(date);\n')
     return new Promise((resolve) => {
         db.serialize(() => {
             prepSql.all(userPhone, (err, result) => {
