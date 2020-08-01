@@ -81,3 +81,4 @@ INNER JOIN message_history ON (sender = userPhone AND receiver = friendPhone)
  OR (receiver = userPhone AND sender = friendPhone)
 GROUP BY friendPhone
 HAVING MAX(date)
+ORDER BY date

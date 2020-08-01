@@ -57,7 +57,8 @@ var GetChatList = function(userPhone) {
     'INNER JOIN message_history ON (sender = userPhone AND receiver = friendPhone)\n' +
     ' OR (receiver = userPhone AND sender = friendPhone)\n' +
     'GROUP BY friendPhone\n' +
-    'HAVING MAX(date);\n')
+    'HAVING MAX(date)\n' +
+    'ORDER BY date DESC;\n') 
     return new Promise((resolve) => {
         db.serialize(() => {
             prepSql.all(userPhone, (err, result) => {

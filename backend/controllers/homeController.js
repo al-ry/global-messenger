@@ -5,6 +5,7 @@ exports.GetHome = (req, res) => {
     console.log(req.cookies)
     console.log(req.session.user)   
     console.log('================home')
+
     if (req.session.user) {       
         res.status(200).send('success')
     } else {

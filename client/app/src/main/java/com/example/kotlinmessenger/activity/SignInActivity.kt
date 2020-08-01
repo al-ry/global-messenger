@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.withStyledAttributes
 import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
@@ -96,6 +97,7 @@ class SignInActivity: AppCompatActivity() {
         MyApplication.m_socket.connect()
         MyApplication.m_socket.emit("user_connected", phone,
             storageManager.getData(Constants.cookieStorageKey))
+        Toast.makeText(this, MyApplication.m_socket.id(), Toast.LENGTH_SHORT).show()
     }
 
 

@@ -2,6 +2,7 @@ package com.example.kotlinmessenger.activity
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -29,49 +30,65 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class LastMessagesActivity : AppCompatActivity() {
-    private var isConnected : Boolean = false
-    //private lateinit var socket: Socket
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_last_messages)
     }
 
+//    override fun onDestroy() {
+//        val storageManager = StorageManager(applicationContext);
+//        MyApplication.m_socket.emit("destroy_app", storageManager.getData(Constants.phoneStorageKey))
+//        MyApplication.m_socket.disconnect()
+//        super.onDestroy()
+//    }
+
     override fun onStart() {
         super.onStart()
         formChatPage()
-//        startConnection()
 
         MyApplication.m_socket.on("log_out")
         {
-            //Toast.makeText(this, "Somebody logged in your account.\nSo sorry", Toast.LENGTH_SHORT).show()
-            signOut()
+            unlogUser()
         }
 
-        recycle_view_messages.adapter
+        val adapter = GroupAdapter<GroupieViewHolder>()
+        recycle_view_messages.adapter = adapter
 
-        MyApplication.m_socket.on("display_last_message") {
-                args->
+        MyApplication.m_socket.on("display_last_message") { args ->
             runOnUiThread {
-                for (i in 0 until recycle_view_messages.childCount) {
-                    val rv : RecyclerView = findViewById(R.id.recycle_view_messages)
-                    val holder: MessageHolder = rv.findViewHolderForAdapterPosition(i) as MessageHolder
-                    if (holder.chat.friendPhone == args[0])
-                    {
-                        holder.chat.message = args[1] as String
-                    }
-                }
+                val storageManager = StorageManager(applicationContext);
+                addNewDialog(storageManager.getData(Constants.phoneStorageKey).toString(), args[0].toString())
+                formChatPage()
             }
         }
+    }
 
+    private fun addNewDialog(fromNumber: String, toNumber: String) {
+        val myApi = createRetrofitClient()
+
+        var call = myApi.addChat(fromNumber, toNumber)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(all: Call<Void>, response: Response<Void>) {
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+            }
+        })
     }
 
     override fun onBackPressed() {
         finish()
     }
 
-    private fun startConnection() {
+    private fun createRetrofitClient(): INodeJS {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Constants.url)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
 
+        return retrofit.create(INodeJS::class.java)
     }
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
@@ -118,7 +135,7 @@ class LastMessagesActivity : AppCompatActivity() {
         recycle_view_messages.adapter = adapter
 
         for (chat in userList) {
-            adapter.add(MessageHolder(chat, userPhone))
+            adapter.add(MessageHolder(chat, userPhone, Constants.chatRowUsualState))
         }
 
         adapter.setOnItemLongClickListener { item, view ->
@@ -197,6 +214,36 @@ class LastMessagesActivity : AppCompatActivity() {
         })
     }
 
+    fun unlogUser()
+    {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Constants.url)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+
+        val myApi = retrofit.create(INodeJS::class.java)
+        val storageManager = StorageManager(applicationContext)
+
+        val cookies =  "connect.sid=" + storageManager.getData(Constants.cookieStorageKey)
+
+        var call = myApi.logOut(cookies)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Toast.makeText(this@LastMessagesActivity,
+                    "Problems with logging out", Toast.LENGTH_SHORT).show()
+            }
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                var phone = storageManager.getData(Constants.phoneStorageKey).toString()
+                storageManager.deleteData(Constants.socketStateStorageKey)
+                storageManager.deleteData(Constants.cookieStorageKey)
+                startActivity(Intent(this@LastMessagesActivity,
+                    SignInActivity::class.java))
+            }
+        })
+    }
+
     fun signOut()
     {
         val retrofit = Retrofit.Builder()
@@ -230,7 +277,7 @@ class LastMessagesActivity : AppCompatActivity() {
     }
 }
 
-class  MessageHolder(val chat: Chat, val userPhone: String) : Item<GroupieViewHolder>()
+class  MessageHolder(val chat: Chat, val userPhone: String, val rowColor: String) : Item<GroupieViewHolder>()
 {
     override fun getLayout(): Int {
         return R.layout.found_chat_row
@@ -238,9 +285,11 @@ class  MessageHolder(val chat: Chat, val userPhone: String) : Item<GroupieViewHo
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.chat_username.text = chat.friendName
+        viewHolder.itemView.char_row.setBackgroundColor(Color.parseColor(rowColor))
         if (chat.senderPhone == userPhone)
             viewHolder.itemView.chat_last_message.text = "You: " + chat.message
         else
             viewHolder.itemView.chat_last_message.text = chat.message
     }
+
 }

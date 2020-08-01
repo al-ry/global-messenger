@@ -30,10 +30,12 @@ class LoadingActivity : AppCompatActivity() {
 
     private fun setConnetcion(phone: String) {
         val storageManager = StorageManager(applicationContext)
+        val cookie = storageManager.getData(Constants.cookieStorageKey).toString()
         MyApplication.m_socket = IO.socket(Constants.url)
         MyApplication.m_socket.connect()
-        MyApplication.m_socket.emit("user_connected", phone,
-            storageManager.getData(Constants.cookieStorageKey))
+        Toast.makeText(this, MyApplication.m_socket.id(), Toast.LENGTH_SHORT).show()
+        MyApplication.m_socket.emit("resume_session", phone, cookie)
+        println(cookie)
     }
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
