@@ -51,7 +51,7 @@ class FindUserActivity : AppCompatActivity() {
 
     fun findUser(phone: String){
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
+            .baseUrl(Constants.URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

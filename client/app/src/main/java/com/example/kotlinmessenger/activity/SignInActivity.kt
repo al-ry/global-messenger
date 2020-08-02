@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.withStyledAttributes
 import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
@@ -13,7 +12,6 @@ import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.CookieStorage
 import com.example.kotlinmessenger.storage.StorageManager
 import io.socket.client.IO
-import io.socket.client.Socket
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -47,7 +45,7 @@ class SignInActivity: AppCompatActivity() {
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
+            .baseUrl(Constants.URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -75,10 +73,12 @@ class SignInActivity: AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                 else {
-                    storageManager.putData(Constants.cookieStorageKey, response.body()!!.cookie.toString());
-                    storageManager.putData(Constants.phoneStorageKey, infoList.first());
+                    storageManager.putData(Constants.COOKIE_STORAGE_KEY, response.body()!!.cookie.toString());
+                    storageManager.putData(Constants.PHONE_STORAGE_KEY, infoList.first());
                     setConnetcion(infoList.first())
-                    startActivity(Intent(this@SignInActivity, LastMessagesActivity::class.java))
+                    intent = Intent(this@SignInActivity, LastMessagesActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                 }
             }
 
@@ -93,11 +93,10 @@ class SignInActivity: AppCompatActivity() {
 
     private fun setConnetcion(phone: String) {
         val storageManager = StorageManager(applicationContext)
-        MyApplication.m_socket = IO.socket(Constants.url)
+        MyApplication.m_socket = IO.socket(Constants.URL)
         MyApplication.m_socket.connect()
         MyApplication.m_socket.emit("user_connected", phone,
-            storageManager.getData(Constants.cookieStorageKey))
-        Toast.makeText(this, MyApplication.m_socket.id(), Toast.LENGTH_SHORT).show()
+            storageManager.getData(Constants.COOKIE_STORAGE_KEY))
     }
 
 

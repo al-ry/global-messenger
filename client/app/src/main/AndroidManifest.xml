@@ -18,7 +18,8 @@
 
         <activity android:name=".activity.ChatLogActivity"
             android:parentActivityName=".activity.LastMessagesActivity"
-            android:label="username">
+            android:label="username"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.kotlinmessenger.activity.LastMessagesActivity" />
@@ -27,7 +28,8 @@
         <activity
             android:name=".activity.FindUserActivity"
             android:label="Find user"
-            android:parentActivityName=".activity.LastMessagesActivity">
+            android:parentActivityName=".activity.LastMessagesActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.kotlinmessenger.activity.LastMessagesActivity" />
@@ -35,11 +37,14 @@
 
         <activity
             android:name=".activity.LastMessagesActivity"
-            android:label="Messages" />
-        <activity android:name=".activity.SignInActivity"/>
+            android:label="Messages"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.SignInActivity"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".activity.LoadingActivity"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,7 +54,9 @@
 
         <activity
             android:name=".activity.SignUpActivity"
-            android:parentActivityName=".activity.SignInActivity">
+            android:parentActivityName=".activity.SignInActivity"
+            android:noHistory="true"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.kotlinmessenger.activity.SignInActivity" />

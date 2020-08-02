@@ -40,7 +40,7 @@ class SignUpActivity : AppCompatActivity()
     }
     private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
+            .baseUrl(Constants.URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -51,7 +51,7 @@ class SignUpActivity : AppCompatActivity()
     private fun registrate(userInfo : List<String>)
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
+            .baseUrl(Constants.URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -69,8 +69,8 @@ class SignUpActivity : AppCompatActivity()
                         Toast.LENGTH_LONG).show()
                 else
                 {
-                    storageManager.putData(Constants.cookieStorageKey, response.body()!!.cookie.toString());
-                    storageManager.putData(Constants.phoneStorageKey, userInfo[1]);
+                    storageManager.putData(Constants.COOKIE_STORAGE_KEY, response.body()!!.cookie.toString());
+                    storageManager.putData(Constants.PHONE_STORAGE_KEY, userInfo[1]);
                     startActivity(Intent(this@SignUpActivity, LastMessagesActivity::class.java))
                 }
             }

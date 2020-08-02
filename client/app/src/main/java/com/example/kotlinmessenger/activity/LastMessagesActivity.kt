@@ -2,25 +2,20 @@ package com.example.kotlinmessenger.activity
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
-import com.example.kotlinmessenger.storage.Chat
-import com.example.kotlinmessenger.storage.Constants
-import com.example.kotlinmessenger.storage.StorageManager
-import com.example.kotlinmessenger.storage.User
+import com.example.kotlinmessenger.storage.*
+import com.example.kotlinmessenger.storage.Constants.LOG_OUT_USER_SOCKET_EVENT
+import com.example.kotlinmessenger.storage.Constants.SHOW_LAST_MESSAGE_SOCKET_EVENT
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_last_messages.*
-import kotlinx.android.synthetic.main.found_chat_row.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,41 +30,32 @@ class LastMessagesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_last_messages)
     }
 
-//    override fun onDestroy() {
-//        val storageManager = StorageManager(applicationContext);
-//        MyApplication.m_socket.emit("destroy_app", storageManager.getData(Constants.phoneStorageKey))
-//        MyApplication.m_socket.disconnect()
-//        super.onDestroy()
-//    }
-
     override fun onStart() {
         super.onStart()
         formChatPage()
 
-        MyApplication.m_socket.on("log_out")
+        MyApplication.m_socket.on(LOG_OUT_USER_SOCKET_EVENT)
         {
             unlogUser()
         }
 
-        val adapter = GroupAdapter<GroupieViewHolder>()
-        recycle_view_messages.adapter = adapter
-
-        MyApplication.m_socket.on("display_last_message") { args ->
+        MyApplication.m_socket.on(SHOW_LAST_MESSAGE_SOCKET_EVENT) { args ->
             runOnUiThread {
                 val storageManager = StorageManager(applicationContext);
-                addNewDialog(storageManager.getData(Constants.phoneStorageKey).toString(), args[0].toString())
-                formChatPage()
+                addNewDialog(storageManager.getData(Constants.PHONE_STORAGE_KEY).toString(), args[0].toString())
+
             }
         }
     }
 
     private fun addNewDialog(fromNumber: String, toNumber: String) {
-        val myApi = createRetrofitClient()
+        val myApi = createRetrofitClientToParseJSON()
 
         var call = myApi.addChat(fromNumber, toNumber)
 
         call.enqueue(object : Callback<Void> {
             override fun onResponse(all: Call<Void>, response: Response<Void>) {
+                formChatPage()
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -81,19 +67,10 @@ class LastMessagesActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun createRetrofitClient(): INodeJS {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-
-        return retrofit.create(INodeJS::class.java)
-    }
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
+            .baseUrl(Constants.URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -101,12 +78,10 @@ class LastMessagesActivity : AppCompatActivity() {
         return retrofit.create(INodeJS::class.java)
     }
 
-    fun formChatPage()
-    {
+    fun formChatPage() {
         val storageManager = StorageManager(applicationContext);
-        val userPhone = storageManager.getData(Constants.phoneStorageKey)
+        val userPhone = storageManager.getData(Constants.PHONE_STORAGE_KEY)
         val myApi = createRetrofitClientToParseJSON()
-
         var call = myApi.getChats(userPhone.toString())
 
         call.enqueue(object : Callback<List<Chat>> {
@@ -129,13 +104,13 @@ class LastMessagesActivity : AppCompatActivity() {
 
     fun showChatPage(userList: List<Chat>) {
         val storageManager = StorageManager(applicationContext);
-        val userPhone = storageManager.getData(Constants.phoneStorageKey).toString()
-
+        val userPhone = storageManager.getData(Constants.PHONE_STORAGE_KEY).toString()
         val adapter = GroupAdapter<GroupieViewHolder>()
         recycle_view_messages.adapter = adapter
+        adapter.clear()
 
         for (chat in userList) {
-            adapter.add(MessageHolder(chat, userPhone, Constants.chatRowUsualState))
+            adapter.add(MessageHolder(chat, userPhone))
         }
 
         adapter.setOnItemLongClickListener { item, view ->
@@ -160,7 +135,7 @@ class LastMessagesActivity : AppCompatActivity() {
     ) {
         AlertDialog.Builder(this@LastMessagesActivity)
             .setTitle("Attention")
-            .setMessage("Message history will be deleted. Are you sure?")
+            .setMessage("Chat will be removed. Are you sure?")
             .setCancelable(false)
             .setPositiveButton("Yes") {
                     dialog, which -> adapter.remove(userItem)
@@ -182,7 +157,6 @@ class LastMessagesActivity : AppCompatActivity() {
                 signOut()
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -192,9 +166,9 @@ class LastMessagesActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    fun deleteChat(userPhone : String, friendPhone: String) {
+    private fun deleteChat(userPhone : String, friendPhone: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
+            .baseUrl(Constants.URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
@@ -214,10 +188,10 @@ class LastMessagesActivity : AppCompatActivity() {
         })
     }
 
-    fun unlogUser()
+    private fun unlogUser()
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
+            .baseUrl(Constants.URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
@@ -225,7 +199,7 @@ class LastMessagesActivity : AppCompatActivity() {
         val myApi = retrofit.create(INodeJS::class.java)
         val storageManager = StorageManager(applicationContext)
 
-        val cookies =  "connect.sid=" + storageManager.getData(Constants.cookieStorageKey)
+        val cookies =  "connect.sid=" + storageManager.getData(Constants.COOKIE_STORAGE_KEY)
 
         var call = myApi.logOut(cookies)
 
@@ -235,19 +209,18 @@ class LastMessagesActivity : AppCompatActivity() {
                     "Problems with logging out", Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                var phone = storageManager.getData(Constants.phoneStorageKey).toString()
-                storageManager.deleteData(Constants.socketStateStorageKey)
-                storageManager.deleteData(Constants.cookieStorageKey)
+                var phone = storageManager.getData(Constants.PHONE_STORAGE_KEY).toString()
+                storageManager.deleteData(Constants.COOKIE_STORAGE_KEY)
                 startActivity(Intent(this@LastMessagesActivity,
                     SignInActivity::class.java))
             }
         })
     }
 
-    fun signOut()
+    private fun signOut()
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
+            .baseUrl(Constants.URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
@@ -255,7 +228,7 @@ class LastMessagesActivity : AppCompatActivity() {
         val myApi = retrofit.create(INodeJS::class.java)
         val storageManager = StorageManager(applicationContext)
 
-        val cookies =  "connect.sid=" + storageManager.getData(Constants.cookieStorageKey)
+        val cookies =  "connect.sid=" + storageManager.getData(Constants.COOKIE_STORAGE_KEY)
 
         var call = myApi.logOut(cookies)
 
@@ -264,32 +237,18 @@ class LastMessagesActivity : AppCompatActivity() {
                 Toast.makeText(this@LastMessagesActivity,
                     "Problems with logging out", Toast.LENGTH_SHORT).show()
             }
+
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                var phone = storageManager.getData(Constants.phoneStorageKey).toString()
+                var phone = storageManager.getData(Constants.PHONE_STORAGE_KEY).toString()
                 MyApplication.m_socket.emit("disconnection" , phone)
                 MyApplication.m_socket.disconnect()
-                storageManager.deleteData(Constants.socketStateStorageKey)
-                storageManager.deleteData(Constants.cookieStorageKey)
-                startActivity(Intent(this@LastMessagesActivity,
-                    SignInActivity::class.java))
+                storageManager.deleteData(Constants.COOKIE_STORAGE_KEY)
+                intent = Intent(this@LastMessagesActivity,
+                    SignInActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
             }
         })
     }
 }
 
-class  MessageHolder(val chat: Chat, val userPhone: String, val rowColor: String) : Item<GroupieViewHolder>()
-{
-    override fun getLayout(): Int {
-        return R.layout.found_chat_row
-    }
-
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.chat_username.text = chat.friendName
-        viewHolder.itemView.char_row.setBackgroundColor(Color.parseColor(rowColor))
-        if (chat.senderPhone == userPhone)
-            viewHolder.itemView.chat_last_message.text = "You: " + chat.message
-        else
-            viewHolder.itemView.chat_last_message.text = chat.message
-    }
-
-}

@@ -88,6 +88,7 @@ module.exports = function(socket) {
         delete connectedUsers[userPhone]   
         delete usersCookies[userPhone]
 
+
         console.log(connectedUsers[userPhone]) 
         console.log('Connected users after deleting: ')
         console.log(connectedUsers)

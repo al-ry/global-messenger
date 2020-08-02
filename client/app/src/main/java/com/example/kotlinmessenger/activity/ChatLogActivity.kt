@@ -1,13 +1,13 @@
 package com.example.kotlinmessenger.activity
 
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinmessenger.MyApplication
 import com.example.kotlinmessenger.R
@@ -34,18 +34,40 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 class ChatLogActivity : AppCompatActivity() {
+    private lateinit var companion : User
+
+    override fun onCreateOptionsMenu(menu: Menu?) : Boolean
+    {
+        menuInflater.inflate(R.menu.chat_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            R.id.show_user_phone_icon -> {
+                if (supportActionBar?.title == companion.name)
+                    supportActionBar?.title = companion.telephone
+                else
+                    supportActionBar?.title = companion.name
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
 
         val storageManager = StorageManager(applicationContext);
-        val user = intent.getParcelableExtra<User>("user")
-        supportActionBar?.title = user?.name + " | " + user?.telephone
+        companion = intent.getParcelableExtra<User>("user")
+
+        supportActionBar?.title = companion.name
 
         val adapter = GroupAdapter<GroupieViewHolder>()
         recycler_view_chat_log.adapter = adapter
-        val senderPhone = storageManager.getData(Constants.phoneStorageKey).toString()
-        val receiverPhone = user.telephone
+        val senderPhone = storageManager.getData(Constants.PHONE_STORAGE_KEY).toString()
+        val receiverPhone = companion.telephone
         val myApi = createRetrofitClientToParseJSON()
         var call = myApi.getHistory(senderPhone, receiverPhone)
 
@@ -60,7 +82,6 @@ class ChatLogActivity : AppCompatActivity() {
                             adapter.add(ChatFromItem(item.text))
                     }
                     recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
-
                 }
             }
 
@@ -68,17 +89,13 @@ class ChatLogActivity : AppCompatActivity() {
             }
         })
 
-        MyApplication.m_socket.on("user_is_typing") {
+        MyApplication.m_socket.on(Constants.USER_IS_TYPING_SOCKET_EVENT) {
             args->
             runOnUiThread {
                 var isTypingText: TextView = findViewById(R.id.is_typing_text)
-                if (args[0] == true)
-                {
-                    isTypingText.text = user.name + " is typing.."
-                }
-
-                else
-                {
+                if (args[0] == true) {
+                    isTypingText.text = companion.name + " is typing.."
+                } else {
                     isTypingText.text = ""
                 }
 
@@ -91,7 +108,6 @@ class ChatLogActivity : AppCompatActivity() {
         chatLogMessageField.addTextChangedListener(object: TextWatcher
         {
             var timer = Timer()
-
             override fun afterTextChanged(s: Editable?) {
                 timer.cancel()
                 val sleep = when(s?.length) {
@@ -102,7 +118,7 @@ class ChatLogActivity : AppCompatActivity() {
                 }
                 timer = Timer()
                 timer.schedule(sleep) {
-                    MyApplication.m_socket.emit("is_typing", false, user.telephone)
+                    MyApplication.m_socket.emit(Constants.IS_TYPING_SOCKET_EVENT, false, companion.telephone)
                 }
             }
 
@@ -110,7 +126,8 @@ class ChatLogActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                MyApplication.m_socket.emit("is_typing", true, user.telephone)
+                recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
+                MyApplication.m_socket.emit(Constants.IS_TYPING_SOCKET_EVENT, true, companion.telephone)
             }
         })
 
@@ -119,52 +136,51 @@ class ChatLogActivity : AppCompatActivity() {
         }
 
 
-        val phoneNumber = storageManager.getData(Constants.phoneStorageKey)
+        val phoneNumber = storageManager.getData(Constants.PHONE_STORAGE_KEY)
         sendButton.setOnClickListener {
             val messageText = message_field_chat_log.text.toString()
             if (messageText.isNotEmpty() && messageText.isNotBlank()) {
                 adapter.add(ChatToItem(messageText))
                 message_field_chat_log.text.clear()
                 recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
-                if (phoneNumber != user.telephone)
-                {
-                    addNewDialog(phoneNumber.toString(), user.telephone)
-                    val dateFormat = SimpleDateFormat(
-                        "yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
-                    val date = Date()
-                    val currentDate = dateFormat.format(date)
-                    MyApplication.m_socket.emit(
-                        "send_message",
-                        phoneNumber,
-                        user.telephone,
-                        messageText,
-                        currentDate
-                    )
-                }
+                addNewDialog(phoneNumber.toString(), companion.telephone)
+                val dateFormat = SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault())
 
-                MyApplication.m_socket.emit("is_typing", false, user.telephone)
+                val date = Date()
+                val currentDate = dateFormat.format(date)
+                MyApplication.m_socket.emit(
+                    Constants.SEND_MESSAGE_SOCKET_EVENT,
+                    phoneNumber,
+                    companion.telephone,
+                    messageText,
+                    currentDate
+                )
+
+                MyApplication.m_socket.emit(Constants.IS_TYPING_SOCKET_EVENT, false, companion.telephone)
             }
         }
 
-        MyApplication.m_socket.on("new_message") {
+        MyApplication.m_socket.on(Constants.NEW_MESSAGE_SOCKET_EVENT) {
             args->
             runOnUiThread {
-                adapter.add(ChatFromItem(args[0].toString()))
-                recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
+                if  (storageManager.getData(Constants.PHONE_STORAGE_KEY).toString() != companion.telephone) {
+                    adapter.add(ChatFromItem(args[0].toString()))
+                    recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
+                }
             }
         }
     }
 
-    private fun LoadingHistory(senderPhone : String, receiverPhone: String): GroupAdapter<GroupieViewHolder>? {
-        val adapter = GroupAdapter<GroupieViewHolder>()
-
-
-        return adapter
-    }
+//    private fun LoadingHistory(senderPhone : String, receiverPhone: String): GroupAdapter<GroupieViewHolder>? {
+//        val adapter = GroupAdapter<GroupieViewHolder>()
+//
+//
+//        return adapter
+//    }
 
     private fun addNewDialog(fromNumber: String, toNumber: String) {
-        val myApi = createRetrofitClient()
+        val myApi = createRetrofitClientToParseJSON()
 
         var call = myApi.addChat(fromNumber, toNumber)
 
@@ -179,7 +195,7 @@ class ChatLogActivity : AppCompatActivity() {
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
+            .baseUrl(Constants.URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -189,7 +205,7 @@ class ChatLogActivity : AppCompatActivity() {
 
     private fun createRetrofitClient(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
+            .baseUrl(Constants.URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
@@ -219,3 +235,4 @@ class ChatToItem(val message : String) : Item<GroupieViewHolder>() {
         return R.layout.chat_to_row
     }
 }
+

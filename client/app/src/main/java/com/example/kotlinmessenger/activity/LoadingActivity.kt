@@ -28,19 +28,17 @@ class LoadingActivity : AppCompatActivity() {
         checkUserSession()
     }
 
-    private fun setConnetcion(phone: String) {
+    private fun setConnection(phone: String) {
         val storageManager = StorageManager(applicationContext)
-        val cookie = storageManager.getData(Constants.cookieStorageKey).toString()
-        MyApplication.m_socket = IO.socket(Constants.url)
+        val cookie = storageManager.getData(Constants.COOKIE_STORAGE_KEY).toString()
+        MyApplication.m_socket = IO.socket(Constants.URL)
         MyApplication.m_socket.connect()
-        Toast.makeText(this, MyApplication.m_socket.id(), Toast.LENGTH_SHORT).show()
         MyApplication.m_socket.emit("resume_session", phone, cookie)
-        println(cookie)
     }
 
     private fun createRetrofitClientToParseJSON(): INodeJS {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.url)
+            .baseUrl(Constants.URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -51,7 +49,7 @@ class LoadingActivity : AppCompatActivity() {
     private fun checkUserSession() {
         storageManager = StorageManager(applicationContext)
         val myApi = createRetrofitClientToParseJSON()
-        val cookies =  "connect.sid=" + storageManager.getData(Constants.cookieStorageKey)
+        val cookies =  "connect.sid=" + storageManager.getData(Constants.COOKIE_STORAGE_KEY)
 
         var call = myApi.checkSession(cookies)
 
@@ -61,7 +59,7 @@ class LoadingActivity : AppCompatActivity() {
                 if  (response.code() == 200) {
 
                     storageManager = StorageManager(applicationContext)
-                    setConnetcion(storageManager.getData(Constants.phoneStorageKey).toString())
+                    setConnection(storageManager.getData(Constants.PHONE_STORAGE_KEY).toString())
                     val intent = Intent(this@LoadingActivity, LastMessagesActivity::class.java)
                     startActivity(intent)
 
