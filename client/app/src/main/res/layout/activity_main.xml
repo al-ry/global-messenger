@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:text="Sing up"
+        android:text="Sign up"
         app:layout_constraintEnd_toEndOf="@+id/sign_up_password_repeat_field"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@+id/sign_up_password_repeat_field"

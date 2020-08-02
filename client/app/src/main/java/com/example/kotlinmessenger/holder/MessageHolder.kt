@@ -1,7 +1,7 @@
-package com.example.kotlinmessenger.storage
+package com.example.kotlinmessenger.holder
 
-import android.graphics.Color
 import com.example.kotlinmessenger.R
+import com.example.kotlinmessenger.storage.Chat
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.found_chat_row.view.*

@@ -10,7 +10,7 @@ import android.widget.Toast
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.storage.User
 import com.example.kotlinmessenger.retrofit.INodeJS
-import com.example.kotlinmessenger.storage.Constants
+import com.example.kotlinmessenger.retrofit.RetrofitClient
 import com.example.kotlinmessenger.storage.UserHolder
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -18,9 +18,6 @@ import kotlinx.android.synthetic.main.activity_find_user.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 class FindUserActivity : AppCompatActivity() {
     private lateinit var myApi: INodeJS
@@ -29,6 +26,12 @@ class FindUserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find_user)
 
+        val retrofit = RetrofitClient.instance
+        myApi = retrofit.create(INodeJS::class.java)
+        searchByTyping()
+    }
+
+    private fun searchByTyping() {
         val userPhoneEditText: EditText = findViewById(R.id.user_phone_for_search)
         var phoneForSearch : String
 
@@ -49,36 +52,23 @@ class FindUserActivity : AppCompatActivity() {
         })
     }
 
-    fun findUser(phone: String){
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        myApi = retrofit.create(INodeJS::class.java)
-
-        myApi.findUser(phone).also {
-            it.enqueue(object : Callback<List<User>> {
-                override fun onResponse(all: Call<List<User>>, response: Response<List<User>>) {
-                    val body = response.body()
-
-                    if (body != null) {
-                        if (body.isNotEmpty())
-                            this@FindUserActivity.renderSearchResult(body)
-                        else
-                            this@FindUserActivity.renderSearchResult(emptyList())
-                    }
+    fun findUser(phone: String) {
+        var call = myApi.findUser(phone)
+        call.enqueue(object : Callback<List<User>> {
+            override fun onResponse(all: Call<List<User>>, response: Response<List<User>>) {
+                val body = response.body()
+                if (body != null) {
+                    this@FindUserActivity.showSearchResult(body)
                 }
+            }
 
-                override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                    Toast.makeText(this@FindUserActivity, "Fail with search", Toast.LENGTH_SHORT).show()
-                }
-            })
-        }
+            override fun onFailure(call: Call<List<User>>, t: Throwable) {
+                Toast.makeText(this@FindUserActivity, "Fail with search", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
-    fun renderSearchResult(userList: List<User>) {
+    fun showSearchResult(userList: List<User>) {
         val adapter = GroupAdapter<GroupieViewHolder>()
         recycle_view_found_user.adapter = adapter
 
@@ -88,7 +78,6 @@ class FindUserActivity : AppCompatActivity() {
 
         adapter.setOnItemClickListener{ item, view ->
             val userItem = item as UserHolder
-            adapter.remove(userItem)
             val intent = Intent(view.context, ChatLogActivity::class.java)
             intent.putExtra("user", userItem.user)
             startActivity(intent)

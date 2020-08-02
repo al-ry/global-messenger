@@ -40,7 +40,7 @@ module.exports = function(socket) {
         console.log('=======user_connected=======')
     })
 
-    socket.on('resume_session', (userPhone, cookie) => {
+    socket.on('resume_session', (userPhone) => {
         console.log('=======resume_session=======')
         connectedUsers[userPhone.toString()] = socket.id
         console.log(connectedUsers)

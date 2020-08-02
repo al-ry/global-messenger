@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import com.example.kotlinmessenger.R
+import com.example.kotlinmessenger.SocketManager
 import com.example.kotlinmessenger.storage.CookieStorage
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.retrofit.RetrofitClient
 import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.StorageManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -19,8 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SignUpActivity : AppCompatActivity()
 {
-    lateinit var myApi:INodeJS
-    private lateinit var storageManager : StorageManager
+    lateinit var myApi: INodeJS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,26 +39,11 @@ class SignUpActivity : AppCompatActivity()
             }
         }
     }
-    private fun createRetrofitClientToParseJSON(): INodeJS {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        return retrofit.create(INodeJS::class.java)
-    }
 
     private fun registrate(userInfo : List<String>)
     {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val myApi = createRetrofitClientToParseJSON()
-        storageManager = StorageManager(applicationContext)
+        val retrofit = RetrofitClient.instance
+        myApi = retrofit.create(INodeJS::class.java)
 
         var call = myApi.registerUser(userInfo[0], userInfo[1], userInfo[2])
 
@@ -69,9 +55,11 @@ class SignUpActivity : AppCompatActivity()
                         Toast.LENGTH_LONG).show()
                 else
                 {
-                    storageManager.putData(Constants.COOKIE_STORAGE_KEY, response.body()!!.cookie.toString());
-                    storageManager.putData(Constants.PHONE_STORAGE_KEY, userInfo[1]);
-                    startActivity(Intent(this@SignUpActivity, LastMessagesActivity::class.java))
+                    putUserInfo(response.body()!!.cookie.toString(), userInfo[1])
+                    SocketManager.setConnection(response.body()!!.cookie.toString(), userInfo[1])
+                    intent = Intent(this@SignUpActivity, LastMessagesActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                 }
             }
 
@@ -80,6 +68,13 @@ class SignUpActivity : AppCompatActivity()
                     Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun putUserInfo(cookie: String, phone: String)
+    {
+        val storageManager = StorageManager(applicationContext);
+        storageManager.putData(Constants.COOKIE_STORAGE_KEY, cookie);
+        storageManager.putData(Constants.PHONE_STORAGE_KEY, phone);
     }
 
     private fun checkUserInfo(username: String, phone: String,
@@ -91,9 +86,21 @@ class SignUpActivity : AppCompatActivity()
             return emptyList()
         }
 
+        if (phone.length != 11)
+        {
+            Toast.makeText(this , "Phone should contain 11 digits, like 89065547839", Toast.LENGTH_LONG).show()
+            return emptyList()
+        }
+
+        if (username.length > 20)
+        {
+            Toast.makeText(this , "Username cant contain more than 20 symbols", Toast.LENGTH_LONG).show()
+            return emptyList()
+        }
+
         if (password != repeatPassword)
         {
-            Toast.makeText(this , "Passwords does not match", Toast.LENGTH_LONG).show()
+            Toast.makeText(this , "Passwords do not match", Toast.LENGTH_LONG).show()
             return emptyList()
         }
 

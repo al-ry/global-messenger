@@ -4,9 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.kotlinmessenger.MyApplication
+import com.example.kotlinmessenger.SocketManager
 import com.example.kotlinmessenger.R
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.retrofit.RetrofitClient
 import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.StorageManager
 import io.socket.client.IO
@@ -19,8 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class LoadingActivity : AppCompatActivity() {
 
-    lateinit var myApi: INodeJS
-    private lateinit var storageManager : StorageManager
+    private lateinit var myApi: INodeJS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,27 +28,11 @@ class LoadingActivity : AppCompatActivity() {
         checkUserSession()
     }
 
-    private fun setConnection(phone: String) {
-        val storageManager = StorageManager(applicationContext)
-        val cookie = storageManager.getData(Constants.COOKIE_STORAGE_KEY).toString()
-        MyApplication.m_socket = IO.socket(Constants.URL)
-        MyApplication.m_socket.connect()
-        MyApplication.m_socket.emit("resume_session", phone, cookie)
-    }
-
-    private fun createRetrofitClientToParseJSON(): INodeJS {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        return retrofit.create(INodeJS::class.java)
-    }
-
     private fun checkUserSession() {
-        storageManager = StorageManager(applicationContext)
-        val myApi = createRetrofitClientToParseJSON()
+        val retrofit = RetrofitClient.instance
+        myApi = retrofit.create(INodeJS::class.java)
+
+        val storageManager = StorageManager(applicationContext)
         val cookies =  "connect.sid=" + storageManager.getData(Constants.COOKIE_STORAGE_KEY)
 
         var call = myApi.checkSession(cookies)
@@ -57,12 +41,9 @@ class LoadingActivity : AppCompatActivity() {
             override fun onResponse(all: Call<Void>, response: Response<Void>)
             {
                 if  (response.code() == 200) {
-
-                    storageManager = StorageManager(applicationContext)
-                    setConnection(storageManager.getData(Constants.PHONE_STORAGE_KEY).toString())
+                    SocketManager.resumeConnection(storageManager.getData(Constants.PHONE_STORAGE_KEY).toString())
                     val intent = Intent(this@LoadingActivity, LastMessagesActivity::class.java)
                     startActivity(intent)
-
                 }
                 else
                     startActivity(Intent(this@LoadingActivity, SignInActivity::class.java))

@@ -1,5 +1,6 @@
 package com.example.kotlinmessenger.retrofit
 
+import com.example.kotlinmessenger.storage.Constants
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,9 +12,9 @@ object RetrofitClient {
         get() {
             if (ourInstance == null)
                 ourInstance = Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:3000/")
+                .baseUrl(Constants.URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
             return ourInstance!!

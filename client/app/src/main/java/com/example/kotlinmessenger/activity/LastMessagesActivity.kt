@@ -7,9 +7,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.kotlinmessenger.MyApplication
+import com.example.kotlinmessenger.SocketManager
 import com.example.kotlinmessenger.R
+import com.example.kotlinmessenger.holder.MessageHolder
 import com.example.kotlinmessenger.retrofit.INodeJS
+import com.example.kotlinmessenger.retrofit.RetrofitClient
 import com.example.kotlinmessenger.storage.*
 import com.example.kotlinmessenger.storage.Constants.LOG_OUT_USER_SOCKET_EVENT
 import com.example.kotlinmessenger.storage.Constants.SHOW_LAST_MESSAGE_SOCKET_EVENT
@@ -25,21 +27,21 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class LastMessagesActivity : AppCompatActivity() {
+    private lateinit var myApi : INodeJS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_last_messages)
-    }
+        val retrofit = RetrofitClient.instance
+        myApi = retrofit.create(INodeJS::class.java)
 
-    override fun onStart() {
-        super.onStart()
         formChatPage()
 
-        MyApplication.m_socket.on(LOG_OUT_USER_SOCKET_EVENT)
+        SocketManager.m_socket.on(LOG_OUT_USER_SOCKET_EVENT)
         {
             unlogUser()
         }
 
-        MyApplication.m_socket.on(SHOW_LAST_MESSAGE_SOCKET_EVENT) { args ->
+        SocketManager.m_socket.on(SHOW_LAST_MESSAGE_SOCKET_EVENT) { args ->
             runOnUiThread {
                 val storageManager = StorageManager(applicationContext);
                 addNewDialog(storageManager.getData(Constants.PHONE_STORAGE_KEY).toString(), args[0].toString())
@@ -49,8 +51,6 @@ class LastMessagesActivity : AppCompatActivity() {
     }
 
     private fun addNewDialog(fromNumber: String, toNumber: String) {
-        val myApi = createRetrofitClientToParseJSON()
-
         var call = myApi.addChat(fromNumber, toNumber)
 
         call.enqueue(object : Callback<Void> {
@@ -63,25 +63,10 @@ class LastMessagesActivity : AppCompatActivity() {
         })
     }
 
-    override fun onBackPressed() {
-        finish()
-    }
-
-
-    private fun createRetrofitClientToParseJSON(): INodeJS {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        return retrofit.create(INodeJS::class.java)
-    }
 
     fun formChatPage() {
         val storageManager = StorageManager(applicationContext);
         val userPhone = storageManager.getData(Constants.PHONE_STORAGE_KEY)
-        val myApi = createRetrofitClientToParseJSON()
         var call = myApi.getChats(userPhone.toString())
 
         call.enqueue(object : Callback<List<Chat>> {
@@ -110,7 +95,12 @@ class LastMessagesActivity : AppCompatActivity() {
         adapter.clear()
 
         for (chat in userList) {
-            adapter.add(MessageHolder(chat, userPhone))
+            adapter.add(
+                MessageHolder(
+                    chat,
+                    userPhone
+                )
+            )
         }
 
         adapter.setOnItemLongClickListener { item, view ->
@@ -122,7 +112,7 @@ class LastMessagesActivity : AppCompatActivity() {
         adapter.setOnItemClickListener{ item, view ->
             val userItem = item as MessageHolder
             val intent = Intent(view.context, ChatLogActivity::class.java)
-            intent.putExtra("user", User("", item.chat.friendPhone, item.chat.friendName))
+            intent.putExtra("user", User(item.chat.friendPhone, item.chat.friendName))
             startActivity(intent)
         }
     }
@@ -167,13 +157,6 @@ class LastMessagesActivity : AppCompatActivity() {
     }
 
     private fun deleteChat(userPhone : String, friendPhone: String) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-
-        val myApi = retrofit.create(INodeJS::class.java)
         val call = myApi.deleteChat(userPhone, friendPhone)
 
         call.enqueue(object : Callback<Void> {
@@ -190,13 +173,6 @@ class LastMessagesActivity : AppCompatActivity() {
 
     private fun unlogUser()
     {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-
-        val myApi = retrofit.create(INodeJS::class.java)
         val storageManager = StorageManager(applicationContext)
 
         val cookies =  "connect.sid=" + storageManager.getData(Constants.COOKIE_STORAGE_KEY)
@@ -219,15 +195,7 @@ class LastMessagesActivity : AppCompatActivity() {
 
     private fun signOut()
     {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-
-        val myApi = retrofit.create(INodeJS::class.java)
         val storageManager = StorageManager(applicationContext)
-
         val cookies =  "connect.sid=" + storageManager.getData(Constants.COOKIE_STORAGE_KEY)
 
         var call = myApi.logOut(cookies)
@@ -240,8 +208,8 @@ class LastMessagesActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 var phone = storageManager.getData(Constants.PHONE_STORAGE_KEY).toString()
-                MyApplication.m_socket.emit("disconnection" , phone)
-                MyApplication.m_socket.disconnect()
+                SocketManager.m_socket.emit("disconnection" , phone)
+                SocketManager.m_socket.disconnect()
                 storageManager.deleteData(Constants.COOKIE_STORAGE_KEY)
                 intent = Intent(this@LastMessagesActivity,
                     SignInActivity::class.java)
