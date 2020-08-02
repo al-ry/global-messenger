@@ -97,11 +97,6 @@ module.exports = function(socket) {
     })
 }
 
-function isUser(userList, userPhone) {
-    return userPhone in userList;
-}
-
-
 function GetSessionId(cookie) {
     var endPos = cookie.indexOf('.')
     var cookieId = cookie.slice(2, endPos)

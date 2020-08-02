@@ -15,7 +15,7 @@ var logoutRouter = require('./routes/logoutRouter')
 var addChatRouter = require('./routes/addChatRouter')
 var userChatsRouter = require('./routes/userChatsRouter')
 var deleteChatRouter = require('./routes/deleteChatRouter')
-var getHistoryRouter = require('./routes/getHistoryRouter')
+var messageHistoryRouter = require('./routes/messageHistoryRouter')
 
 var app = express()
 var server = require('http').Server(app)
@@ -44,13 +44,13 @@ app.use(logoutRouter)
 app.use(addChatRouter)
 app.use(deleteChatRouter)
 app.use(userChatsRouter)
-app.use(getHistoryRouter)
+app.use(messageHistoryRouter)
 
 app.get('/', (req, res) => {
     res.sendFile('index.html', {root: __dirname})
 })
-var io = module.exports.io = require("socket.io")(server)
 
+var io = module.exports.io = require("socket.io")(server)
 const socketManager = require('./socketManager')
 
 io.on('connection', socketManager)
