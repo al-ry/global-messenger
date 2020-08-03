@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/design_default_color_surface"
+    android:paddingStart="30dp"
+    android:paddingEnd="30dp">
+
+    <TextView
+        android:id="@+id/sign_in_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="Sign in"
+        android:textColor="@android:color/background_dark"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <Button
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Sign in"
+        app:layout_constraintEnd_toEndOf="@+id/sign_up_link"
+        app:layout_constraintStart_toStartOf="@+id/sign_up_link"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_link" />
+
+    <TextView
+        android:id="@+id/sign_up_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="Don`t have an account?"
+        android:textColor="@color/design_default_color_on_secondary"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/sign_in_password_field"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="@+id/sign_in_password_field"
+        app:layout_constraintTop_toBottomOf="@+id/sign_in_password_field" />
+
+    <EditText
+        android:id="@+id/sign_in_phone_number_field"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="48dp"
+        android:ems="10"
+        android:hint="Phone number"
+        android:inputType="textPersonName|phone"
+        app:layout_constraintEnd_toEndOf="@+id/sign_in_text_view"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="@+id/sign_in_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/sign_in_text_view" />
+
+    <EditText
+        android:id="@+id/sign_in_password_field"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/sign_in_phone_number_field"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/sign_in_phone_number_field"
+        app:layout_constraintTop_toBottomOf="@+id/sign_in_phone_number_field" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
