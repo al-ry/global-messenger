@@ -7,6 +7,7 @@ var usersCookies = [];
 
 module.exports = function(socket) {
 
+<<<<<<< HEAD
     //console.log('User connected:' + socket.id)
 
     //connectedUsers.push(socket.id)
@@ -46,6 +47,23 @@ module.exports = function(socket) {
         console.log(connectedUsers)
         console.log(usersCookies)
         console.log('=======resume_session=======')
+=======
+    socket.on('user_connected', (userPhone, cookie) => {
+        if (usersCookies[userPhone] != undefined)
+        {
+            io.to(connectedUsers[userPhone]).emit('log_out')
+            var sessionId = GetSessionId(usersCookies[userPhone])
+            sessionDB.destroy(sessionId, (err) => {
+                if (err) throw err;
+            })
+        }
+        usersCookies[userPhone] = cookie
+        connectedUsers[userPhone.toString()] = socket.id
+    })
+
+    socket.on('resume_session', (userPhone) => {
+        connectedUsers[userPhone.toString()] = socket.id
+>>>>>>> f998f98166c518ea2e075e66312dd2d1281299f0
     })
 
     socket.on('send_message', (sender, receiver, msg, date) => {
@@ -53,14 +71,18 @@ module.exports = function(socket) {
         if(connectedUsers[receiver] != undefined)
         {        
             var receiverSocketId = connectedUsers[receiver]
+<<<<<<< HEAD
             console.log('CONNECTED USER ARRAY: ')
             console.log(connectedUsers)
             console.log('MESSAGE SENDING TO: ' + receiverSocketId)
+=======
+>>>>>>> f998f98166c518ea2e075e66312dd2d1281299f0
         
             io.to(receiverSocketId).emit("new_message", msg, date)
             io.to(receiverSocketId).emit('display_last_message', sender, msg, date)
         }
         newMessage.Save()
+<<<<<<< HEAD
         //add to db
     })
 
@@ -71,6 +93,8 @@ module.exports = function(socket) {
         console.log('After: ')
         delete connectedUsers[userPhone] 
         console.log(connectedUsers)
+=======
+>>>>>>> f998f98166c518ea2e075e66312dd2d1281299f0
     })
 
     socket.on('is_typing', (isTyping, receiver) =>
@@ -80,6 +104,7 @@ module.exports = function(socket) {
     })
 
     socket.on('disconnection', (userPhone) => {
+<<<<<<< HEAD
         console.log('=======disconnection=======')
         console.log(connectedUsers)
         console.log('Connected users before deleting: ')
@@ -94,6 +119,10 @@ module.exports = function(socket) {
         console.log(connectedUsers)
         console.log('User disconnected ' + socket.id + "," + userPhone)  
         console.log('=======disconnection=======') 
+=======
+        delete connectedUsers[userPhone]   
+        delete usersCookies[userPhone]
+>>>>>>> f998f98166c518ea2e075e66312dd2d1281299f0
     })
 }
 
