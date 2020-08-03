@@ -45,7 +45,11 @@ module.exports = class User {
         }
         return false
     } 
+<<<<<<< Updated upstream
     static AddChat(userId, friendId) {
+=======
+    static AddChat(userPhone, friendPhone) {
+>>>>>>> Stashed changes
         return new Promise((resolve) => {
             db.serialize(() => {
                 var prep = db.prepare('SELECT * FROM user_has_friend WHERE (id_user = ?) AND (id_friend = ?);')
