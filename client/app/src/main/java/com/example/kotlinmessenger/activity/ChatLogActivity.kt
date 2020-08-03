@@ -73,8 +73,8 @@ class ChatLogActivity : AppCompatActivity() {
             }
         }
     }
-    override fun onCreateOptionsMenu(menu: Menu?) : Boolean
-    {
+
+    override fun onCreateOptionsMenu(menu: Menu?) : Boolean {
         menuInflater.inflate(R.menu.chat_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
@@ -142,8 +142,7 @@ class ChatLogActivity : AppCompatActivity() {
         }
     }
 
-    private fun getCurrentDate() : String
-    {
+    private fun getCurrentDate() : String {
         val dateFormat = SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault())
         val date = Date()
         return dateFormat.format(date)
@@ -152,8 +151,8 @@ class ChatLogActivity : AppCompatActivity() {
     private fun detectTyping() {
         val storageManager = StorageManager(applicationContext);
         val chatLogMessageField : EditText = findViewById(R.id.message_field_chat_log)
-        chatLogMessageField.addTextChangedListener(object: TextWatcher
-        {
+
+        chatLogMessageField.addTextChangedListener(object: TextWatcher {
             var timer = Timer()
             override fun afterTextChanged(s: Editable?) {
                 timer.cancel()

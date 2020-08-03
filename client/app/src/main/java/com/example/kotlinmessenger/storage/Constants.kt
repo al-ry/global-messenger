@@ -1,7 +1,7 @@
 package com.example.kotlinmessenger.storage
 
 object Constants {
-    const val URL = "http://192.168.0.103:3000/"
+    const val URL = "http://172.20.10.3:3000/"
     const val PHONE_STORAGE_KEY = "phone"
     const val COOKIE_STORAGE_KEY = "cookies"
     const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
@@ -13,7 +13,4 @@ object Constants {
     const val SHOW_LAST_MESSAGE_SOCKET_EVENT = "display_last_message"
     const val USER_CONNECTION_SOCKET_EVENT = "user_connected"
     const val RESUME_CONNECTION_SOCKET_EVENT = "resume_session"
-
-
-
 }

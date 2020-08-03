@@ -21,10 +21,6 @@ import kotlinx.android.synthetic.main.activity_last_messages.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class LastMessagesActivity : AppCompatActivity() {
     private lateinit var myApi : INodeJS
@@ -38,7 +34,7 @@ class LastMessagesActivity : AppCompatActivity() {
 
         SocketManager.m_socket.on(LOG_OUT_USER_SOCKET_EVENT)
         {
-            unlogUser()
+            kickUser()
         }
 
         SocketManager.m_socket.on(SHOW_LAST_MESSAGE_SOCKET_EVENT) { args ->
@@ -109,7 +105,7 @@ class LastMessagesActivity : AppCompatActivity() {
             true
         }
 
-        adapter.setOnItemClickListener{ item, view ->
+        adapter.setOnItemClickListener { item, view ->
             val userItem = item as MessageHolder
             val intent = Intent(view.context, ChatLogActivity::class.java)
             intent.putExtra("user", User(item.chat.friendPhone, item.chat.friendName))
@@ -143,6 +139,7 @@ class LastMessagesActivity : AppCompatActivity() {
                 startActivity(Intent(this@LastMessagesActivity,
                         FindUserActivity::class.java))
             }
+
             R.id.menu_sign_out -> {
                 signOut()
             }
@@ -150,8 +147,7 @@ class LastMessagesActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?) : Boolean
-    {
+    override fun onCreateOptionsMenu(menu: Menu?) : Boolean {
         menuInflater.inflate(R.menu.nav_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
@@ -171,12 +167,9 @@ class LastMessagesActivity : AppCompatActivity() {
         })
     }
 
-    private fun unlogUser()
-    {
+    private fun kickUser() {
         val storageManager = StorageManager(applicationContext)
-
         val cookies =  "connect.sid=" + storageManager.getData(Constants.COOKIE_STORAGE_KEY)
-
         var call = myApi.logOut(cookies)
 
         call.enqueue(object : Callback<Void> {
@@ -197,7 +190,6 @@ class LastMessagesActivity : AppCompatActivity() {
     {
         val storageManager = StorageManager(applicationContext)
         val cookies =  "connect.sid=" + storageManager.getData(Constants.COOKIE_STORAGE_KEY)
-
         var call = myApi.logOut(cookies)
 
         call.enqueue(object : Callback<Void> {

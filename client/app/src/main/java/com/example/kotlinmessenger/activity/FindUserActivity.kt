@@ -54,6 +54,7 @@ class FindUserActivity : AppCompatActivity() {
 
     fun findUser(phone: String) {
         var call = myApi.findUser(phone)
+
         call.enqueue(object : Callback<List<User>> {
             override fun onResponse(all: Call<List<User>>, response: Response<List<User>>) {
                 val body = response.body()
@@ -70,6 +71,7 @@ class FindUserActivity : AppCompatActivity() {
 
     fun showSearchResult(userList: List<User>) {
         val adapter = GroupAdapter<GroupieViewHolder>()
+
         recycle_view_found_user.adapter = adapter
 
         for (user in userList) {

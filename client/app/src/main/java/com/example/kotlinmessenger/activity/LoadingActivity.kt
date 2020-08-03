@@ -21,7 +21,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class LoadingActivity : AppCompatActivity() {
 
     private lateinit var myApi: INodeJS
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages)
@@ -38,8 +37,7 @@ class LoadingActivity : AppCompatActivity() {
         var call = myApi.checkSession(cookies)
 
         call.enqueue(object : Callback<Void> {
-            override fun onResponse(all: Call<Void>, response: Response<Void>)
-            {
+            override fun onResponse(all: Call<Void>, response: Response<Void>) {
                 if  (response.code() == 200) {
                     SocketManager.resumeConnection(storageManager.getData(Constants.PHONE_STORAGE_KEY).toString())
                     val intent = Intent(this@LoadingActivity, LastMessagesActivity::class.java)

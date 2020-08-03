@@ -48,7 +48,7 @@
     <EditText
         android:id="@+id/sign_in_phone_number_field"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_marginTop="48dp"
         android:ems="10"
         android:hint="Phone number"
@@ -61,13 +61,13 @@
     <EditText
         android:id="@+id/sign_in_password_field"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="32dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@+id/sign_in_phone_number_field"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/sign_in_phone_number_field"
         app:layout_constraintTop_toBottomOf="@+id/sign_in_phone_number_field" />
 

@@ -12,6 +12,7 @@ import com.example.kotlinmessenger.retrofit.RetrofitClient
 import com.example.kotlinmessenger.storage.Constants
 import com.example.kotlinmessenger.storage.CookieStorage
 import com.example.kotlinmessenger.storage.StorageManager
+import com.example.kotlinmessenger.storage.UserInfo
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,10 +28,10 @@ class SignInActivity: AppCompatActivity() {
 
         val signInButton: Button = findViewById(R.id.sign_in_button)
         signInButton.setOnClickListener {
-            val userInfo = listOf(sign_in_phone_number_field.text.toString(),
+            val userInfo = UserInfo(sign_in_phone_number_field.text.toString(),
                 sign_in_password_field.text.toString())
 
-            if (checkUserInfo(userInfo))
+            if (checkUserInfo(userInfo) != null)
                 signInUser(userInfo)
             else
                 Toast.makeText(this, "Fields should not be empty", Toast.LENGTH_SHORT).show()
@@ -41,11 +42,11 @@ class SignInActivity: AppCompatActivity() {
         }
     }
 
-    private fun signInUser(infoList: List<String>) {
+    private fun signInUser(info : UserInfo) {
         val retrofit = RetrofitClient.instance
         myApi = retrofit.create(INodeJS::class.java)
 
-        val call = myApi.logInUser(infoList.first(), infoList.last())
+        val call = myApi.logInUser(info.phone, info.password)
 
         call.enqueue(object : Callback<CookieStorage> {
             override fun onResponse(all: Call<CookieStorage>, response: Response<CookieStorage>) {
@@ -53,8 +54,8 @@ class SignInActivity: AppCompatActivity() {
                     Toast.makeText(this@SignInActivity,
                         "User not found", Toast.LENGTH_LONG).show()
                 else {
-                    putUserInfo(response.body()!!.cookie.toString(), infoList.first())
-                    SocketManager.setConnection(response.body()!!.cookie.toString(), infoList.first())
+                    putUserInfo(response.body()!!.cookie.toString(), info.phone)
+                    SocketManager.setConnection(response.body()!!.cookie.toString(), info.phone)
                     intent = Intent(this@SignInActivity, LastMessagesActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
@@ -69,19 +70,15 @@ class SignInActivity: AppCompatActivity() {
         })
     }
 
-    private fun putUserInfo(cookie: String, phone: String)
-    {
+    private fun putUserInfo(cookie: String, phone: String) {
         val storageManager = StorageManager(applicationContext);
         storageManager.putData(Constants.COOKIE_STORAGE_KEY, cookie);
         storageManager.putData(Constants.PHONE_STORAGE_KEY, phone);
     }
 
-    private fun checkUserInfo(infoList: List<String>) : Boolean{
-
-        for (item in infoList) {
-            if (item.isEmpty()) return false
-        }
-
-        return true
+    private fun checkUserInfo(info: UserInfo) : UserInfo? {
+        if (info.phone.isEmpty() || info.password.isEmpty())
+            return null
+        return info
     }
 }
