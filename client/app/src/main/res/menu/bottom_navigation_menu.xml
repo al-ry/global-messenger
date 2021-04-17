@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/searchFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search_item_text"/>
+    <item
+        android:id="@+id/chatsFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_chats"
+        android:title="@string/chats_item_text"/>
+    <item
+        android:id="@+id/userInfoFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/settings_item_text"/>
+</menu>

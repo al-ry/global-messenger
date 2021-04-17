@@ -1,66 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.kotlinmessenger"
-    >
-    <uses-permission android:name="android.permission.INTERNET" />
-
+    package="com.example.global_messenger_reworked">
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Global Messenger"
+        android:label="@string/app_name"
+        android:name = ".App"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:targetApi="m"
-        tools:replace="android:label">
-
-        <activity android:name=".activity.ChatLogActivity"
-            android:parentActivityName=".activity.LastMessagesActivity"
-            android:label="username"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.kotlinmessenger.activity.LastMessagesActivity" />
-        </activity>
-
-        <activity
-            android:name=".activity.FindUserActivity"
-            android:label="Find user"
-            android:parentActivityName=".activity.LastMessagesActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.kotlinmessenger.activity.LastMessagesActivity" />
-        </activity>
-
-        <activity
-            android:name=".activity.LastMessagesActivity"
-            android:label="Messages"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.SignInActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activity.LoadingActivity"
-            android:noHistory="true"
-            android:screenOrientation="portrait">
+        android:theme="@style/Theme.Globalmessengerreworked">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".activity.SignUpActivity"
-            android:parentActivityName=".activity.SignInActivity"
-            android:noHistory="true"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.kotlinmessenger.activity.SignInActivity" />
-        </activity>
-
     </application>
+
 </manifest>

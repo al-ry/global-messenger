@@ -1,3 +1,2 @@
-include ':PhoneNumberInputLib'
 include ':app'
-rootProject.name='KotlinMessenger'
+rootProject.name = "global-messenger-reworked"
