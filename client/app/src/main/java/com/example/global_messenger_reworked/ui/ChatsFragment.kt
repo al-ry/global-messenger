@@ -46,7 +46,6 @@ class ChatsFragment : Fragment() {
     private fun setupObserve() {
         viewModel.chats.observe(viewLifecycleOwner, Observer {
             when(it.status) {
-
                 Status.SUCCESS -> {
                     rvChats.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
