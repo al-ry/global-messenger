@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -34,7 +35,8 @@ class ChatsFragment : Fragment() {
     private fun setupRecyclerView(view: View) {
         progressBar = view.findViewById(R.id.chat_list_loader)
         chatsAdapter = ChatsAdapter { item ->
-            print("item clicked")
+            val bundle = bundleOf("friend_phone" to item.getChatInfo().friendPhone)
+            findNavController().navigate(R.id.action_chatsFragment_to_chatFragment, bundle)
         }
 
         rvChats = view.findViewById(R.id.recycle_view_chats)

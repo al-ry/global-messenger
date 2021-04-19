@@ -21,7 +21,7 @@ class ChatsViewModel @Inject constructor(
         getChats()
     }
 
-    private fun getChats()  = viewModelScope.launch {
+    private fun getChats() = viewModelScope.launch {
         chats.postValue(Resource.loading(null))
         repository.getChats("89021089168").let {
             if (it.isSuccessful){

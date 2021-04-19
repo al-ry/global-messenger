@@ -44,6 +44,10 @@ class ChatsAdapter(private val listener: (ChatViewHolder) -> Unit) : RecyclerVie
         private var chatLastMessage : TextView = itemView.findViewById(R.id.chat_last_message)
         private var mCivAvatar: CircleImageView = itemView.findViewById(R.id.chat_civ_avatar)
 
+        fun getChatInfo() : Chat {
+            return chatInfo
+        }
+
         fun bind(chat: Chat) {
             chatInfo = chat
             chatUsername.text = chatInfo.friendName

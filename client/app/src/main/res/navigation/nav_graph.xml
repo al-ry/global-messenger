@@ -9,15 +9,32 @@
         android:id="@+id/chatsFragment"
         android:name="com.example.global_messenger_reworked.ui.ChatsFragment"
         android:label="fragment_chats"
-        tools:layout="@layout/fragment_chats" />
+        tools:layout="@layout/fragment_chats" >
+        <action
+            android:id="@+id/action_chatsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.global_messenger_reworked.ui.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+
     <fragment
         android:id="@+id/userInfoFragment"
         android:name="com.example.global_messenger_reworked.ui.UserInfoFragment"
         android:label="fragment_user_info"
         tools:layout="@layout/fragment_user_info" />
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.global_messenger_reworked.ui.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat">
+        <argument
+            android:name="friend_phone"
+            app:argType="string" />
+
+    </fragment>
 </navigation>

@@ -2,6 +2,7 @@ package com.example.global_messenger_reworked.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.global_messenger_reworked.R
@@ -19,4 +20,15 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(bottomNavView, navController)
     }
+
+    fun hideBottomNavigation() {
+        bottomNavView.visibility = View.GONE
+    }
+
+    fun showBottomNavigation()
+    {
+        bottomNavView.visibility = View.VISIBLE
+    }
 }
+
+
