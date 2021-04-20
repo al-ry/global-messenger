@@ -5,4 +5,8 @@ import javax.inject.Inject
 
 class MainRepository @Inject constructor(private val apiHelper: ApiHelper) {
     suspend fun getChats(phone: String) = apiHelper.getChats(phone)
+
+    suspend fun getMessageHistory(
+            senderPhone: String, receiverPhone: String
+    ) = apiHelper.getHistory(senderPhone, receiverPhone)
 }
