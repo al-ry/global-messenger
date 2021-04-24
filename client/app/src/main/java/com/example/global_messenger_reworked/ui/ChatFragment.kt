@@ -7,16 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.global_messenger_reworked.R
+import com.example.global_messenger_reworked.ui.adapters.ChatsAdapter
+import com.example.global_messenger_reworked.ui.adapters.MessageHistoryAdapter
 import com.example.global_messenger_reworked.utils.Status
 import com.example.global_messenger_reworked.viewModels.ChatViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +24,7 @@ class ChatFragment : Fragment() {
     private val viewModel: ChatViewModel by viewModels()
     private lateinit var progressBar: ProgressBar
     private lateinit var rvChats: RecyclerView
-    private lateinit var chatsAdapter: ChatsAdapter
+    private lateinit var messageHistoryAdapter: MessageHistoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +32,9 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //view.findViewById<TextView>(R.id.chat_fragment_text).text = arguments?.getString("friend_phone")
-        setupRecyclerView(view)
+        setupViews(view)
         setupObserve()
-
-
+        viewModel.getMessageHistory(arguments?.getString("friend_phone")!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -55,15 +53,13 @@ class ChatFragment : Fragment() {
         super.onDetach()
     }
 
-    private fun setupRecyclerView(view: View) {
+    private fun setupViews(view: View) {
         progressBar = view.findViewById(R.id.chat_loader)
-        chatsAdapter = ChatsAdapter { item ->
-            val bundle = bundleOf("friend_phone" to item.getChatInfo().friendPhone)
-            findNavController().navigate(R.id.action_chatsFragment_to_chatFragment, bundle)
-        }
 
-        rvChats = view.findViewById(R.id.recycler_view_chat_history)
-        rvChats.adapter = chatsAdapter
+        messageHistoryAdapter = MessageHistoryAdapter("89021089168")
+
+        rvChats = view.findViewById(R.id.recycler_view_message_history)
+        rvChats.adapter = messageHistoryAdapter
         rvChats.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         rvChats.setHasFixedSize(true)
     }
@@ -72,7 +68,14 @@ class ChatFragment : Fragment() {
         viewModel.messageHistory.observe(viewLifecycleOwner, {
             when(it.status) {
                 Status.SUCCESS -> {
-                    println(it.data)
+                    rvChats.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                    it.data.let {it ->
+                        it.let {
+                            messageHistoryAdapter.setupMessageHistory(it!!);
+                            rvChats.scrollToPosition(messageHistoryAdapter.itemCount - 1);
+                        }
+                    }
                 }
 
                 Status.LOADING -> {

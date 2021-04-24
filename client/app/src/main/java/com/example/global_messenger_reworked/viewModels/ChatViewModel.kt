@@ -17,11 +17,7 @@ class ChatViewModel @Inject constructor(
 
     val messageHistory = MutableLiveData<Resource<List<Message>>>()
 
-//    init {
-//        messageHistory.postValue(Resource.loading(null))
-//    }
-
-    private fun getMessageHistory(friendPhone: String) = viewModelScope.launch {
+    fun getMessageHistory(friendPhone: String) = viewModelScope.launch {
         messageHistory.postValue(Resource.loading(null))
         repository.getMessageHistory("89021089168", friendPhone).let {
             if (it.isSuccessful){

@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.global_messenger_reworked.R
+import com.example.global_messenger_reworked.ui.adapters.ChatsAdapter
 import com.example.global_messenger_reworked.utils.Status
 import com.example.global_messenger_reworked.viewModels.ChatsViewModel
 import dagger.hilt.android.AndroidEntryPoint

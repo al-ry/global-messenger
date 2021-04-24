@@ -33,7 +33,7 @@
         android:layout_marginRight="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_chat_history"
+        android:id="@+id/recycler_view_message_history"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
@@ -53,10 +53,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/recycler_view_chat_history"
-        app:layout_constraintEnd_toEndOf="@+id/recycler_view_chat_history"
-        app:layout_constraintStart_toStartOf="@+id/recycler_view_chat_history"
-        app:layout_constraintTop_toTopOf="@+id/recycler_view_chat_history" />
+        app:layout_constraintBottom_toBottomOf="@+id/recycler_view_message_history"
+        app:layout_constraintEnd_toEndOf="@+id/recycler_view_message_history"
+        app:layout_constraintStart_toStartOf="@+id/recycler_view_message_history"
+        app:layout_constraintTop_toTopOf="@+id/recycler_view_message_history" />
 
     <TextView
         android:id="@+id/is_typing_text"

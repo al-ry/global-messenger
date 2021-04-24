@@ -1,10 +1,9 @@
-package com.example.global_messenger_reworked.ui
+package com.example.global_messenger_reworked.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.global_messenger_reworked.R
 import com.example.global_messenger_reworked.data.models.Chat
